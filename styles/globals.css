@@ -1,16 +1,14 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button {
+  @apply bg-blue-500 hover:bg-blue-600 text-white w-40 text-lg font-bold py-2 px-8 rounded-lg whitespace-nowrap;
+}
+.buttonDis {
+  @apply bg-[#cccc] border border-[#9999] text-[#6666] w-40 text-lg font-bold py-2 px-8 rounded-lg whitespace-nowrap cursor-not-allowed;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-* {
-  box-sizing: border-box;
+.divComprar {
+  @apply flex w-72 space-x-2 justify-center;
 }

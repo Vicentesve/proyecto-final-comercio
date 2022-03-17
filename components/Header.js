@@ -40,7 +40,10 @@ function Header() {
         >
           Vender
         </button>
-        <button className={`${session ? "button" : "buttonDis"}`}>
+        <button
+          onClick={() => router.push("/misacciones")}
+          className={`${session ? "button" : "buttonDis"}`}
+        >
           Mis acciones
         </button>
       </div>

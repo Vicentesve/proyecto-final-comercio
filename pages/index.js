@@ -1,7 +1,8 @@
 import Head from "next/head";
 import Header from "../components/Header";
 
-export default function Home() {
+export default function Home({ acciones }) {
+  console.log({ acciones });
   return (
     <div>
       <Head>

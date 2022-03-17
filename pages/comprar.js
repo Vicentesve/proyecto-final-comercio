@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
+import { getSession, useSession } from "next-auth/react";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/initFirebase";
+import Swal from "sweetalert2";
+import CurrencyFormat from "react-currency-format";
 
 function Comprar() {
+  const { data: session } = useSession();
+
   const date = new Date();
   const futureDate = date.getDate();
   date.setDate(futureDate);
@@ -19,17 +26,83 @@ function Comprar() {
     { id: "AMZN", nombre: "Amazon" },
   ];
 
-  const comprarAccion = () => {
-    const accion = {
-      accionID,
-      valor,
-      cambio,
-      cantidad,
-      comision,
-      fecha,
-    };
-    console.log(accion);
-  };
+  async function comprarAccion() {
+    const docRef = doc(db, "users", session.user.email, "stocks", accionID);
+    const docSnap = await getDoc(docRef);
+
+    var accion = {};
+
+    if (docSnap.exists()) {
+      accion = {
+        accionID,
+        valor:
+          (parseFloat(valor) * parseInt(cantidad) + docSnap.data().total) /
+          (parseInt(cantidad) + docSnap.data().cantidad),
+        cambio: parseFloat(cambio),
+        cantidad: parseInt(cantidad) + docSnap.data().cantidad,
+        comision: parseFloat(comision),
+        fecha,
+        total: valor * parseInt(cantidad) + docSnap.data().total,
+      };
+    } else {
+      accion = {
+        accionID,
+        valor: parseFloat(valor),
+        cambio: parseFloat(cambio),
+        cantidad: parseInt(cantidad),
+        comision: parseFloat(comision),
+        fecha,
+        total: valor * cantidad,
+      };
+    }
+
+    await setDoc(
+      doc(db, "users", session.user.email, "stocks", accionID),
+      accion
+    ).then(
+      Swal.fire({
+        icon: "success",
+        title: "¡Compra exitosa!",
+        showConfirmButton: false,
+        timer: 1500,
+      })
+    );
+  }
+
+  function validations() {
+    if (valor.length == 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Ingresa el valor de la acción",
+      });
+      return false;
+    } else if (cambio.length == 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Ingresa el tipo de cambio ",
+      });
+      return false;
+    } else if (cantidad.length == 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Ingresa la cantidad de acciones",
+      });
+      return false;
+    } else if (comision.length === 0) {
+      Swal.fire({
+        icon: "warning",
+        title: "Ingresa la comisión",
+      });
+      return false;
+    } else if (fecha === undefined) {
+      Swal.fire({
+        icon: "warning",
+        title: "Ingresa la fecha de la compra",
+      });
+      return false;
+    }
+    return true;
+  }
 
   return (
     <div>
@@ -59,7 +132,11 @@ function Comprar() {
             <input
               value={valor}
               onChange={(e) => {
-                setValor(e.currentTarget.value);
+                setValor(
+                  e.currentTarget.value
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*?)\..*/g, "$1")
+                );
               }}
               type="text"
               className="w-[70%] border border-gray-500 text-sm"
@@ -71,7 +148,11 @@ function Comprar() {
             <input
               value={cambio}
               onChange={(e) => {
-                setCambio(e.target.value);
+                setCambio(
+                  e.currentTarget.value
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*?)\..*/g, "$1")
+                );
               }}
               type="text"
               className="w-[70%] border border-gray-500 text-sm"
@@ -84,7 +165,7 @@ function Comprar() {
               type="text"
               value={cantidad}
               onChange={(e) => {
-                setCantidad(e.target.value);
+                setCantidad(e.currentTarget.value.replace(/\D/g, ""));
               }}
               className="w-[70%] border border-gray-500 text-sm"
             />
@@ -92,13 +173,17 @@ function Comprar() {
 
           <div className="divComprar">
             <p className="w-[30%] ">Comisión: </p>
-            <input
-              type="text"
+            <CurrencyFormat
+              className="w-[70%] border border-gray-500 text-sm"
+              suffix={"%"}
               value={comision}
               onChange={(e) => {
-                setComision(e.target.value);
+                setComision(
+                  e.target.value
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*?)\..*/g, "$1")
+                );
               }}
-              className="w-[70%] border border-gray-500 text-sm"
             />
           </div>
 
@@ -107,7 +192,7 @@ function Comprar() {
             <input
               className="w-[70%]"
               type="date"
-              defaultValue={defaultValue}
+              defaultValue={fecha}
               onChange={(e) => {
                 setFecha(e.target.value);
               }}
@@ -116,6 +201,10 @@ function Comprar() {
 
           <button
             onClick={() => {
+              if (!validations()) {
+                return;
+              }
+
               comprarAccion();
               setValor("");
               setCambio("");
@@ -133,3 +222,20 @@ function Comprar() {
 }
 
 export default Comprar;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: { session },
+  };
+}

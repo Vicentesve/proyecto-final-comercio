@@ -12,3 +12,7 @@
 .divComprar {
   @apply flex w-72 space-x-2 justify-center;
 }
+
+.headerTable {
+  @apply font-bold text-xl mb-5;
+}

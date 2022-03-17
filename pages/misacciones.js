@@ -20,7 +20,7 @@ function misAcciones({ entriesData }) {
           <div>
             <h1 className="headerTable">Acción</h1>
             {entriesData.map((acciones) => (
-              <p>{acciones.id}</p>
+              <p key={acciones.id}>{acciones.id}</p>
             ))}
           </div>
           <div>
@@ -39,19 +39,20 @@ function misAcciones({ entriesData }) {
           <div>
             <h1 className="headerTable">Cantidad</h1>
             {entriesData.map((acciones) => (
-              <p>{acciones.cantidad}</p>
+              <p key={acciones.id}>{acciones.cantidad}</p>
             ))}
           </div>
           <div>
             <h1 className="headerTable">Última fecha de compra</h1>
             {entriesData.map((acciones) => (
-              <p>{acciones.fecha}</p>
+              <p key={acciones.id}>{acciones.fecha}</p>
             ))}
           </div>
           <div>
             <h1 className="headerTable">Tipo de cambio</h1>
             {entriesData.map((acciones) => (
               <CurrencyFormat
+                key={acciones.id}
                 value={acciones.cambio}
                 displayType={"text"}
                 thousandSeparator={true}
@@ -63,13 +64,14 @@ function misAcciones({ entriesData }) {
           <div>
             <h1 className="headerTable">Comisión</h1>
             {entriesData.map((acciones) => (
-              <p>{acciones.comision}%</p>
+              <p key={acciones.id}>{acciones.comision}%</p>
             ))}
           </div>
           <div>
             <h1 className="headerTable">Total</h1>
             {entriesData.map((acciones) => (
               <CurrencyFormat
+                key={acciones.id}
                 value={acciones.total}
                 displayType={"text"}
                 thousandSeparator={true}

@@ -27,6 +27,7 @@ function misAcciones({ entriesData }) {
             <h1 className="headerTable">Valor</h1>
             {entriesData.map((acciones) => (
               <CurrencyFormat
+                key={acciones.id}
                 value={acciones.valor}
                 displayType={"text"}
                 thousandSeparator={true}

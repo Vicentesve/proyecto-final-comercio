@@ -11,9 +11,11 @@ import { AiOutlineStock } from "react-icons/ai";
 
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 function SideNav(props) {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <div>
@@ -44,7 +46,10 @@ function SideNav(props) {
               </div>
 
               <div className="flex flex-col space-y-4 p-2">
-                <div className="elementsSideNav">
+                <div
+                  onClick={() => router.push("/misacciones")}
+                  className="elementsSideNav"
+                >
                   <ChartBarIcon className="h-4" />
                   <button>Mis acciones</button>
                 </div>

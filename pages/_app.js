@@ -1,4 +1,6 @@
 import "../styles/globals.css";
+import "../styles/embla/embla.css";
+import "../styles/ticket.css";
 import { SessionProvider } from "next-auth/react";
 
 export default function App({

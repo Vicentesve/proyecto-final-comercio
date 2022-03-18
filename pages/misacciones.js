@@ -5,6 +5,9 @@ import CurrencyFormat from "react-currency-format";
 import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
 import SideNav from "../components/SideNav";
+import useEmblaCarousel from "embla-carousel-react";
+import EmblaCarousel from "../components/EmblaCarousel";
+import Ticket from "../components/Ticket";
 
 function MisAcciones({ entriesData }) {
   const [state, setNavOpen] = useState(false);
@@ -15,6 +18,9 @@ function MisAcciones({ entriesData }) {
   const closeNav = () => {
     setNavOpen(false);
   };
+
+  const SLIDE_COUNT = 5;
+  const slides = Array.from(Array(SLIDE_COUNT).keys());
   return (
     <div>
       <SideNav click={closeNav} state={state} />
@@ -25,6 +31,10 @@ function MisAcciones({ entriesData }) {
       >
         {/* Header */}
         <Header click={openNav} />
+        <div className="bg-white">
+          <h1 className="font-semibold text-xl p-2">Mis acciones</h1>
+          <EmblaCarousel acciones={entriesData} />
+        </div>
       </div>
       {/* <div className="flex flex-col items-center p-5">
         <h1 className="mb-10 text-2xl font-bold">Mis acciones</h1>

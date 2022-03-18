@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
+    "embla-carousel-react": "^6.2.0",
     "firebase": "^9.6.8",
     "firebase-admin": "^10.0.2",
     "next": "12.1.0",

@@ -16,3 +16,11 @@
 .headerTable {
   @apply font-bold text-xl mb-5;
 }
+
+.elementsNav {
+  @apply flex items-center space-x-2 border-b border-[#232F3E] hover:border-b hover:border-white;
+}
+
+.elementsSideNav {
+  @apply flex items-center  space-x-2 hover:bg-[#3d5068] rounded-md p-1 text-xs;
+}

@@ -1,20 +1,32 @@
-import { async } from "@firebase/util";
 import { collection, getDocs, query } from "firebase/firestore";
 import { getSession, useSession } from "next-auth/react";
-import React from "react";
+import React, { useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
+import SideNav from "../components/SideNav";
 
 function misAcciones({ entriesData }) {
-  entriesData.map((acciones) => {
-    console.log(acciones.cantidad);
-  });
+  const [state, setNavOpen] = useState(false);
 
+  const openNav = () => {
+    setNavOpen(true);
+  };
+  const closeNav = () => {
+    setNavOpen(false);
+  };
   return (
     <div>
-      <Header />
-      <div className="flex flex-col items-center p-5">
+      <SideNav click={closeNav} state={state} />
+      <div
+        className={`bg-gray-200 top-0 right-0 w-full h-full -z-100 ${
+          state ? "fixed" : "static"
+        }`}
+      >
+        {/* Header */}
+        <Header click={openNav} />
+      </div>
+      {/* <div className="flex flex-col items-center p-5">
         <h1 className="mb-10 text-2xl font-bold">Mis acciones</h1>
         <div className="w-[80%] bg-blue-200 flex justify-between px-5 py-2 rounded-lg">
           <div>
@@ -81,7 +93,7 @@ function misAcciones({ entriesData }) {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

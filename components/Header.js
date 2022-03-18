@@ -1,51 +1,75 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { LoginIcon } from "@heroicons/react/outline";
+import {
+  ChartBarIcon,
+  MenuIcon,
+  ReceiptRefundIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+} from "@heroicons/react/outline";
+import { BiUser } from "react-icons/bi";
 
-function Header() {
+function Header(props) {
   const router = useRouter();
   const { data: session } = useSession();
 
   return (
-    <header className="border-b border-gray-400 shadow-md">
-      <div className="flex justify-end p-5 items-center space-x-3">
-        <p className="font-bold">
-          {session
-            ? `Bienvenido ${session.user.name.substring(
-                0,
-                session.user.name.indexOf(" ")
-              )} ›`
-            : ""}
-        </p>
-        <div
-          className="flex space-x-2 items-center bg-blue-500 p-1 rounded-lg text-white px-5 py-2 whitespace-nowrap cursor-pointer 
-          hover:bg-blue-600"
-          onClick={session ? signOut : signIn}
-        >
-          <LoginIcon className="h-6" />
-          <button>{session ? "Cerrar sesión" : "Iniciar sesión"}</button>
+    <header>
+      <div className="sm:hidden flex items-center justify-between p-2 bg-[#232F3E] text-white">
+        <div className="flex space-x-2">
+          <MenuIcon onClick={props.click} className="h-7 mt-[2px]" />
+          <img className="h-7" src="/logo.png" alt="" />
+        </div>
+        <div className="flex items-center space-x-1">
+          <p
+            onClick={!session ? signIn : signOut}
+            className="text-sm font-semibold"
+          >
+            {session
+              ? `${session.user.name.substring(
+                  0,
+                  session.user.name.indexOf(" ")
+                )} ›`
+              : "Sign In ›"}
+          </p>
+          <BiUser className="w-6 h-6" />
         </div>
       </div>
-      <div className="flex justify-center space-x-10 p-5">
-        <button
-          onClick={() => router.push("/comprar")}
-          className={`${session ? "button" : "buttonDis"}`}
-        >
-          Comprar
-        </button>
-        <button
-          onClick={() => router.push("/vender")}
-          className={`${session ? "button" : "buttonDis"}`}
-        >
-          Vender
-        </button>
-        <button
-          onClick={() => router.push("/misacciones")}
-          className={`${session ? "button" : "buttonDis"}`}
-        >
-          Mis acciones
-        </button>
+      <div className="hidden p-3 bg-[#232F3E] text-white md:flex justify-between items-center">
+        <div className="flex">
+          <img className="h-12" src="/logo2.png" alt="" />
+          <div className="ml-10 flex space-x-10 mt-2">
+            <div className="elementsNav">
+              <ChartBarIcon className="h-4" />
+              <button onClick={() => router.push("/misacciones")}>
+                Mis acciones
+              </button>
+            </div>
+            <div className="elementsNav">
+              <ShoppingBagIcon className="h-4" />
+              <button>Comprar acciones</button>
+            </div>
+            <div className="elementsNav">
+              <ReceiptRefundIcon className="h-4" />
+              <button>Vender acciones</button>
+            </div>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 cursor-pointer">
+          <p
+            onClick={!session ? signIn : signOut}
+            className="hover:underline font-semibold"
+          >
+            {session
+              ? `Bienvenido, ${session.user.name.substring(
+                  0,
+                  session.user.name.indexOf(" ")
+                )} ›`
+              : "Sign In ›"}
+          </p>
+          <UserCircleIcon className="h-8" />
+        </div>
       </div>
     </header>
   );

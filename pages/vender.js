@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
 
-function vender({ entriesData }) {
+function Vender({ entriesData }) {
   const [accionID, setAccion] = useState(0);
   const [cantVender, setCantVender] = useState();
   const [valorVender, setValorVender] = useState();
@@ -157,7 +157,7 @@ function vender({ entriesData }) {
   );
 }
 
-export default vender;
+export default Vender;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

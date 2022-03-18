@@ -60,7 +60,7 @@ function Ticket({
             </div>
           </div>
           <div className="p-4 flex items-center justify-between">
-            <img className=" h-16" src="/codeBars.png" alt="" />
+            <img className="h-[70px]" src="/codeBars.png" alt="" />
             <div className="mr-5">
               <p className="font-semibold">Total</p>
               <CurrencyFormat

@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
 import SideNav from "../components/SideNav";
 
-function misAcciones({ entriesData }) {
+function MisAcciones({ entriesData }) {
   const [state, setNavOpen] = useState(false);
 
   const openNav = () => {
@@ -123,4 +123,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default misAcciones;
+export default MisAcciones;

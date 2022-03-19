@@ -65,6 +65,7 @@ function Comprar() {
     if (docSnap.exists()) {
       accion = {
         accionID,
+        nombre,
         valor:
           (valor.replaceAll(",", "").replace("$", "") * parseInt(cantidad) +
             docSnap.data().total) /
@@ -81,6 +82,7 @@ function Comprar() {
     } else {
       accion = {
         accionID,
+        nombre,
         valor: parseFloat(valor.replaceAll(",", "").replace("$", "")),
         cambio: parseFloat(cambio),
         cantidad: parseInt(cantidad),

@@ -38,6 +38,7 @@ function MisAcciones({ entriesData }) {
             {entriesData.map((accion) => (
               <div className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10">
                 <Ticket
+                  key={accion.id}
                   id={accion.id}
                   nombre={accion.nombre}
                   fecha={accion.fecha}

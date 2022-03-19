@@ -1,13 +1,10 @@
 import { collection, getDocs, query } from "firebase/firestore";
 import { getSession, useSession } from "next-auth/react";
 import React, { useState } from "react";
-import CurrencyFormat from "react-currency-format";
 import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
 import SideNav from "../components/SideNav";
-import useEmblaCarousel from "embla-carousel-react";
 import EmblaCarousel from "../components/EmblaCarousel";
-import Ticket from "../components/Ticket";
 
 function MisAcciones({ entriesData }) {
   const [state, setNavOpen] = useState(false);

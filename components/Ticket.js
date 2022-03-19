@@ -19,7 +19,7 @@ function Ticket({
 
   return (
     <div className="w-full">
-      <div ref={ref}>
+      <div ref={ref} className="w-full">
         <div className="h-96 border border-[#c7bbbb] shadow-lg rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <div>
@@ -80,8 +80,8 @@ function Ticket({
         </div>
       </div>
       <div className=" bg-white border border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-100"></div>
-      <div className="absolute z-80 top-[295px] left-[25px] text-sm text-gray-600">
-        {Array.from({ length: ref.current.offsetWidth / 6.5 }, (_, i) => "-")}
+      <div className="absolute z-80 top-[295px] left-[25px] text-sm text-gray-600 ">
+        {Array.from({ length: ref.current.offsetWidth / 3.5 }, (_, i) => ".")}
       </div>
       <div className=" bg-white border border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-100"></div>
     </div>

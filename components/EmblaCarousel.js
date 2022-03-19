@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { DotButton } from "./EmblaCarouselButtons";
-import CurrencyFormat from "react-currency-format";
 import Ticket from "./Ticket";
-
-const SCALE_FACTOR = 3;
 
 const numberWithinRange = (number, min, max) =>
   Math.min(Math.max(number, min), max);

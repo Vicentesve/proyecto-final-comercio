@@ -36,7 +36,10 @@ function MisAcciones({ entriesData }) {
           </div>
           <div className="p-10 w-full sm:flex justify-around hidden flex-wrap">
             {entriesData.map((accion) => (
-              <div className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10">
+              <div
+                key={accion.id}
+                className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10"
+              >
                 <Ticket
                   key={accion.id}
                   id={accion.id}

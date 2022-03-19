@@ -9,6 +9,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/outline";
 import { BiUser } from "react-icons/bi";
+import Swal from "sweetalert2";
 
 function Header(props) {
   const router = useRouter();
@@ -36,13 +37,25 @@ function Header(props) {
           <BiUser className="w-6 h-6" />
         </div>
       </div>
+
       <div className="hidden p-3 bg-[#232F3E] text-white md:flex justify-between items-center">
         <div className="flex">
           <img className="h-12" src="/logo2.png" alt="" />
           <div className="ml-10 flex space-x-10 mt-2">
             <div className="elementsNav">
               <ChartBarIcon className="h-4" />
-              <button onClick={() => router.push("/misacciones")}>
+              <button
+                onClick={() => {
+                  if (session) {
+                    router.push("/misacciones");
+                  } else {
+                    Swal.fire({
+                      icon: "warning",
+                      title: "Inicia sesión para ver tus acciones",
+                    });
+                  }
+                }}
+              >
                 Mis acciones
               </button>
             </div>
@@ -56,11 +69,8 @@ function Header(props) {
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2 cursor-pointer">
-          <p
-            onClick={!session ? signIn : signOut}
-            className="hover:underline font-semibold"
-          >
+        <div className="hover:underline flex items-center space-x-2 cursor-pointer">
+          <p onClick={!session ? signIn : signOut} className="font-semibold">
             {session
               ? `Bienvenido, ${session.user.name.substring(
                   0,

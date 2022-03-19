@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CurrencyFormat from "react-currency-format";
 
 function Ticket({
@@ -11,15 +11,20 @@ function Ticket({
   total,
   urlImg,
 }) {
-  const ref = useRef(0);
-  var num = 0;
-  useEffect(() => {
-    num = ref.current.offsetWidth;
-  }, []);
+  const componentRef = useRef();
+  const { width, height } = useContainerDimensions(componentRef);
+
+  /*  returnDiv(){
+    return (
+      <div className="relative z-100 -top-[90px] left-[25px] text-sm text-gray-600 w-full">
+        {Array.from({ length: ref.current.offsetWidth / 3.5 }, (_, i) => ".")}
+      </div>
+    );
+  } */
 
   return (
-    <div className="w-full">
-      <div ref={ref} className="w-full">
+    <div ref={componentRef} className="w-full">
+      <div className="w-full">
         <div className="h-96 border border-[#c7bbbb] shadow-lg rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <div>
@@ -79,13 +84,40 @@ function Ticket({
           </div>
         </div>
       </div>
-      <div className=" bg-white border-l border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-100"></div>
-      <div className="absolute z-80 top-[295px] left-[25px] text-sm text-gray-600 ">
-        {Array.from({ length: ref.current.offsetWidth / 3.5 }, (_, i) => ".")}
+      <div className=" bg-white border-l border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-80"></div>
+      <div className="relative z-100 -top-[90px] left-[25px] text-sm text-gray-600 w-full">
+        {Array.from({ length: width / 3.5 }, (_, i) => ".")}
       </div>
-      <div className=" bg-white border-r border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-100"></div>
+      <div className=" bg-white border-r border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-80"></div>
     </div>
   );
 }
 
 export default Ticket;
+
+export const useContainerDimensions = (myRef) => {
+  const getDimensions = () => ({
+    width: myRef.current.offsetWidth,
+    height: myRef.current.offsetHeight,
+  });
+
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setDimensions(getDimensions());
+    };
+
+    if (myRef.current) {
+      setDimensions(getDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [myRef]);
+
+  return dimensions;
+};

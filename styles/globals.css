@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .button {
-  @apply bg-blue-500 hover:bg-blue-600 text-white w-40 text-lg font-bold py-2 px-8 rounded-lg whitespace-nowrap;
+  @apply bg-[#232F3E] hover:bg-[#3d5068] text-white w-40 text-base font-semibold py-2 px-8 rounded-lg whitespace-nowrap;
 }
 .buttonDis {
   @apply bg-[#cccc] border border-[#9999] text-[#6666] w-40 text-lg font-bold py-2 px-8 rounded-lg whitespace-nowrap cursor-not-allowed;

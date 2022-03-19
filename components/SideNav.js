@@ -54,7 +54,10 @@ function SideNav(props) {
                   <button>Mis acciones</button>
                 </div>
 
-                <div className="elementsSideNav">
+                <div
+                  onClick={() => router.push("/comprar")}
+                  className="elementsSideNav"
+                >
                   <ShoppingBagIcon className="h-4" />
                   <button>Comprar acciones</button>
                 </div>

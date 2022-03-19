@@ -25,7 +25,7 @@ function Ticket({
   return (
     <div ref={componentRef} className="w-full">
       <div className="w-full">
-        <div className="h-96 border border-[#c7bbbb] shadow-lg rounded-lg">
+        <div className="h-96 border border-[#c7bbbb]  rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <div>
               <div className="p-4">

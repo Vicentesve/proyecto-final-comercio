@@ -79,11 +79,11 @@ function Ticket({
           </div>
         </div>
       </div>
-      <div className=" bg-white border border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-100"></div>
+      <div className=" bg-white border-l border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-100"></div>
       <div className="absolute z-80 top-[295px] left-[25px] text-sm text-gray-600 ">
         {Array.from({ length: ref.current.offsetWidth / 3.5 }, (_, i) => ".")}
       </div>
-      <div className=" bg-white border border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-100"></div>
+      <div className=" bg-white border-r border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-100"></div>
     </div>
   );
 }

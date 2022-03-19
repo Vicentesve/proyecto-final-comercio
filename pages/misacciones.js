@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import { db } from "../firebase/initFirebase";
 import SideNav from "../components/SideNav";
 import EmblaCarousel from "../components/EmblaCarousel";
+import Ticket from "../components/Ticket";
 
 function MisAcciones({ entriesData }) {
   const [state, setNavOpen] = useState(false);
@@ -27,10 +28,28 @@ function MisAcciones({ entriesData }) {
         {/* Header */}
         <Header click={openNav} />
         <div className="bg-white">
-          <h1 className="font-semibold text-xl p-2 text-center mt-2">
+          <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
             Mis acciones
           </h1>
-          <EmblaCarousel acciones={entriesData} />
+          <div className="sm:hidden">
+            <EmblaCarousel acciones={entriesData} />
+          </div>
+          <div className="p-10 w-full sm:flex justify-around hidden flex-wrap">
+            {entriesData.map((accion) => (
+              <div className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10">
+                <Ticket
+                  id={accion.id}
+                  nombre={accion.nombre}
+                  fecha={accion.fecha}
+                  cantidad={accion.cantidad}
+                  valor={accion.valor}
+                  comision={accion.comision}
+                  total={accion.total}
+                  urlImg={accion.urlImg}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -85,7 +85,7 @@ function Ticket({
         </div>
       </div>
       <div className=" bg-white border-l border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-80"></div>
-      <div className="relative z-100 -top-[90px] left-[25px] text-sm text-gray-600 overflow-hidden">
+      <div className="absolute z-100 top-[295px] left-[25px] text-sm text-gray-600 overflow-hidden">
         {Array.from({ length: width / 3.5 }, (_, i) => ".")}
       </div>
       <div className=" bg-white border-r border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-80"></div>

@@ -12,6 +12,7 @@ function Comprar() {
 
   //#region variables acciones
   const [accionID, setAccion] = useState(0);
+  const [nombre, setNombre] = useState("");
   const [valor, setValor] = useState("");
   const [cambio, setCambio] = useState("");
   const [cantidad, setCantidad] = useState("");
@@ -164,6 +165,7 @@ function Comprar() {
                 acciones.map((accion) => {
                   if (e.target.value == accion.id) {
                     setUrlImg(accion.urlImg);
+                    setNombre(accion.nombre);
                   }
                 });
               }}

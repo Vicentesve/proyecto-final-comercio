@@ -25,7 +25,7 @@ function Ticket({
   return (
     <div ref={componentRef} className="w-full">
       <div className="w-full">
-        <div className="h-96 border border-[#c7bbbb]  rounded-lg">
+        <div className="h-96 border border-[#c7bbbb] shadow-lg rounded-lg">
           <div className="flex flex-col justify-between h-full">
             <div>
               <div className="p-4">
@@ -84,11 +84,11 @@ function Ticket({
           </div>
         </div>
       </div>
-      <div className=" bg-white border-l border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-80"></div>
+      <div className=" bg-white border-l border-l-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -right-5 z-80"></div>
       <div className="absolute z-100 top-[295px] left-[20px] text-sm text-gray-600 overflow-hidden">
         {Array.from({ length: width / 4.5 }, (_, i) => ".")}
       </div>
-      <div className=" bg-white border-r border-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-80"></div>
+      <div className=" bg-white border-r border-r-[#c7bbbb] w-8 rounded-full h-8  absolute top-[295px] -left-5 z-80"></div>
     </div>
   );
 }

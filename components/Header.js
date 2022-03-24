@@ -11,7 +11,6 @@ import {
 } from "@heroicons/react/outline";
 import { BiUser } from "react-icons/bi";
 import Swal from "sweetalert2";
-import Image from "next/image";
 
 function Header(props) {
   const router = useRouter();
@@ -22,7 +21,7 @@ function Header(props) {
       <div className="bg-[#232F3E] text-white p-4 flex justify-between items-center">
         <div className="flex items-center space-x-1 sm:mr-10 border border-white">
           <MenuIcon onClick={props.click} className="h-7 mt-[2px] sm:hidden" />
-          <img className="h-7 w-full sm:h-12 object-contain" src="/logo2.png" />
+          <img className="h-7  sm:h-12 object-contain" src="/logo2.png" />
         </div>
 
         <div className="scrollbar-hide overflow-x-scroll hidden sm:space-x-5 md:space-x-10 mt-2 sm:flex px-1">

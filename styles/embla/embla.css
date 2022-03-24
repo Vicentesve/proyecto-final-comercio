@@ -63,12 +63,13 @@
   z-index: 1;
   top: 50%;
   transform: translateY(-50%);
+
   border: 0;
   width: 30px;
   height: 30px;
   justify-content: center;
   align-items: center;
-  fill: #1bcacd;
+  fill: #232f3e;
   padding: 0;
 }
 

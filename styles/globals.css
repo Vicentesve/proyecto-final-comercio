@@ -14,7 +14,7 @@
 }
 
 .elementsNav {
-  @apply flex items-center space-x-2 border-b border-[#232F3E] hover:border-b hover:border-white whitespace-nowrap transition 
+  @apply flex items-center space-x-2  whitespace-nowrap transition 
   duration-100 transform hover:scale-110;
 }
 .elementsSideNav {

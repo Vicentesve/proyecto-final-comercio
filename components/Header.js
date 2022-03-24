@@ -29,7 +29,7 @@ function Header(props) {
           />
         </div>
 
-        <div className="scrollbar-hide overflow-x-scroll hidden sm:space-x-5 md:space-x-10 mt-2 sm:flex">
+        <div className="scrollbar-hide overflow-x-scroll hidden sm:space-x-5 md:space-x-10 mt-2 sm:flex px-1">
           <div
             onClick={() => {
               if (session) {
@@ -100,10 +100,24 @@ function Header(props) {
           <div className="absolute top-0 right-52 bg-gradient-to-l from-[#232F3E] h-20 w-1/12" />
         </div>
 
-        <div className="flex whitespace-nowrap mt-1 sm:mt-2 items-center sm: ml-8 space-x-2">
-          <p onClick={!session ? signIn : signOut}>
+        <div
+          className="transition duration-100 transform hover:scale-110
+         cursor-pointer flex whitespace-nowrap mt-1 sm:mt-2 items-center sm: ml-8 space-x-2"
+        >
+          <p
+            className="hidden sm:inline-block"
+            onClick={!session ? signIn : signOut}
+          >
             {session
               ? `Bienvenido, ${session.user.name.substring(
+                  0,
+                  session.user.name.indexOf(" ")
+                )} ›`
+              : "Sign In ›"}
+          </p>
+          <p className="sm:hidden" onClick={!session ? signIn : signOut}>
+            {session
+              ? `${session.user.name.substring(
                   0,
                   session.user.name.indexOf(" ")
                 )} ›`

@@ -6,6 +6,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
 import _, { groupBy } from "underscore";
 import WalletCarousel from "../components/WalletCarousel";
+import TableGanancias from "../components/TableGanancias";
 
 function Micartera({ wallet, entriesData }) {
   //#region variables sideNav
@@ -32,9 +33,11 @@ function Micartera({ wallet, entriesData }) {
 
       <div className="m-auto p-4">
         {Object.entries(wallet).length > 0 ? (
-          <div className="border border-[#c7bbbb] shadow-lg rounded-lg p-2">
-            <WalletCarousel myWallet={wallet} entriesData={entriesData} />
-          </div>
+          <>
+            <div className="sm:w-[60%] md:w-[50%] lg:w-[40%] m-auto border border-[#c7bbbb] shadow-lg rounded-lg p-2">
+              <WalletCarousel myWallet={wallet} entriesData={entriesData} />
+            </div>
+          </>
         ) : (
           <img src="bgNoWallet.png" alt="" />
         )}

@@ -19,7 +19,7 @@ function Header(props) {
   return (
     <header>
       <div className="bg-[#232F3E] text-white p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-1 sm:mr-10 border border-white">
+        <div className="flex items-center space-x-1 sm:mr-10 ">
           <MenuIcon onClick={props.click} className="h-7 mt-[2px] sm:hidden" />
           <img className="h-7  sm:h-12 object-contain" src="/logo2.png" />
         </div>

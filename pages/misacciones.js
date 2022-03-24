@@ -24,31 +24,41 @@ function MisAcciones({ entriesData }) {
       <Header click={openNav} />
       <div className="bg-white">
         <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
-          Mis acciones
+          {entriesData.length > 0 ? "Mis acciones" : "No tienes acciones"}
         </h1>
-        <div className="sm:hidden">
-          <EmblaCarousel acciones={entriesData} />
-        </div>
-        <div className="p-10 w-full sm:flex justify-around hidden flex-wrap">
-          {entriesData.map((accion) => (
-            <div
-              key={accion.id}
-              className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10"
-            >
-              <Ticket
-                key={accion.id}
-                id={accion.id}
-                nombre={accion.nombre}
-                fecha={accion.fecha}
-                cantidad={accion.cantidad}
-                valor={accion.valor}
-                comision={accion.comision}
-                total={accion.total}
-                urlImg={accion.urlImg}
-              />
+        {entriesData.length > 0 ? (
+          <>
+            <div className="sm:hidden">
+              <EmblaCarousel acciones={entriesData} />
             </div>
-          ))}
-        </div>
+            <div className="p-10 w-full sm:flex justify-around hidden flex-wrap">
+              {entriesData.map((accion) => (
+                <div
+                  key={accion.id}
+                  className="w-[45%] md:w-[40%] lg:w-[30%] xl:w-[25%] relative mb-10"
+                >
+                  <Ticket
+                    key={accion.id}
+                    id={accion.id}
+                    nombre={accion.nombre}
+                    fecha={accion.fecha}
+                    cantidad={accion.cantidad}
+                    valor={accion.valor}
+                    comision={accion.comision}
+                    total={accion.total}
+                    urlImg={accion.urlImg}
+                  />
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <img
+            className="object-contain sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] m-auto"
+            src="noStock.jpg"
+            alt=""
+          />
+        )}
       </div>
     </div>
   );

@@ -31,13 +31,15 @@ function WalletCarousel({ myWallet, entriesData }) {
   //#endregion
 
   //#region getGanancias
-  function getGanacias(pAccionID, pGanancias) {
-    let ganacias = pGanancias * -1;
+  function getGanacias(pAccionID) {
+    let ganacias = 0;
     Object.entries(myWallet).map(([key, value]) => {
       if (key === pAccionID) {
         value.map((wallet) => {
           if (wallet.tipo == "Venta") {
             ganacias += wallet.monto;
+          } else {
+            ganacias -= wallet.monto;
           }
         });
       }
@@ -63,8 +65,6 @@ function WalletCarousel({ myWallet, entriesData }) {
   }
   //#endregion
 
-  console.log(Object.entries(myWallet).length + "-lenght");
-
   return (
     <div>
       <div className="embla shadow-sm">
@@ -75,42 +75,40 @@ function WalletCarousel({ myWallet, entriesData }) {
                 <div className="relative overflow-hidden h-fit">
                   <h1 className=" font-semibold">{key}</h1>
                   <table className="w-full text-left mt-2 text-sm">
-                    <tr className="text-sm text-left">
-                      <th>Descripción</th>
-                      <th>Monto</th>
-                      <th>Fecha</th>
-                    </tr>
-                    {value.map((wallet, i) => (
-                      <tr key={wallet.accionID}>
-                        <td className="flex items-center">
-                          {wallet.tipo === "Compra" ? (
-                            <ShoppingBagIcon className="h-4 mt-[2px]" />
-                          ) : (
-                            <ReceiptRefundIcon className="h-4 mt-[2px]" />
-                          )}
-                          <p>
-                            {wallet.tipo} de {wallet.cantidad}{" "}
-                            {wallet.cantidad > 1 ? "acciones" : "acción"}{" "}
-                          </p>
-                        </td>
-                        <td>
-                          <CurrencyFormat
-                            value={wallet.monto}
-                            displayType={"text"}
-                            thousandSeparator={true}
-                            prefix={"$"}
-                            renderText={(value) => <p>{value}</p>}
-                          />
-                        </td>
-                        <td>{wallet.fecha}</td>
+                    <tbody>
+                      <tr className="text-sm text-left">
+                        <th>Descripción</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
                       </tr>
-                    ))}
+                      {value.map((wallet, i) => (
+                        <tr key={i}>
+                          <td className="flex items-center space-x-1">
+                            {wallet.tipo === "Compra" ? (
+                              <ShoppingBagIcon className="h-4 mt-[1px]" />
+                            ) : (
+                              <ReceiptRefundIcon className="h-4 mt-[1px]" />
+                            )}
+                            <p>
+                              {wallet.tipo} de {wallet.cantidad}{" "}
+                              {wallet.cantidad > 1 ? "acciones" : "acción"}{" "}
+                            </p>
+                          </td>
+                          <td>
+                            <CurrencyFormat
+                              value={wallet.monto}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              prefix={"$"}
+                              renderText={(value) => <p>{value}</p>}
+                            />
+                          </td>
+                          <td>{wallet.fecha}</td>
+                        </tr>
+                      ))}
+                    </tbody>
                   </table>
-                  {entriesData.map((accion) => {
-                    if (accion.accionID === key) {
-                      return getGanacias(key, accion.total);
-                    }
-                  })}
+                  {getGanacias(key)}
                 </div>
               </div>
             ))}

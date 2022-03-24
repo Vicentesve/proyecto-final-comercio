@@ -61,8 +61,13 @@ function Vender({ entriesData }) {
         title: "No puedes vender mas acciones de las que tienes",
       });
     } else if (cantVender == cantidad) {
-      alert("Eliminar");
       await deleteDoc(doc(db, "users", session.user.email, "stocks", accionID));
+      Swal.fire({
+        icon: "success",
+        title: "Venta de la acción " + nombre + " exitosa!",
+        showConfirmButton: false,
+        timer: 1500,
+      });
     } else {
       const accion = {
         accionID,
@@ -141,7 +146,7 @@ function Vender({ entriesData }) {
 
       {acciones.length ? (
         <div className="p-4 sm:w-[60%] m-auto md:w-[50%] lg:w-[40%] xl:w-[30%]">
-          <div className="border border-[#c7bbbb] shadow-lg rounded-lg p-2">
+          <div className="m-auto border border-[#c7bbbb] shadow-lg rounded-lg p-2">
             {/* Seleccionar acción a comprar */}
             <div className="shadow-lg rounded-md">
               <select
@@ -177,6 +182,7 @@ function Vender({ entriesData }) {
                     total={accion.total}
                     urlImg={accion.urlImg}
                   />
+
                   {/* Valor de la accion */}
                   <div className="text-sm mt-5 flex flex-col space-y-1">
                     <h3>Ingresa el valor de la acción a vender</h3>
@@ -219,7 +225,11 @@ function Vender({ entriesData }) {
           })}
         </div>
       ) : (
-        <img src="noStock.jpg" alt="" />
+        <img
+          className="object-contain sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] m-auto"
+          src="noStock.jpg"
+          alt=""
+        />
       )}
     </div>
   );

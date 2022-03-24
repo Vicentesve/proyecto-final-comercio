@@ -1,16 +1,13 @@
 import Header from "../components/Header";
 import SideNav from "../components/SideNav";
 import React, { useState } from "react";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
 import _, { groupBy } from "underscore";
 import WalletCarousel from "../components/WalletCarousel";
 
-function micartera({ wallet, entriesData }) {
-  const { data: session } = useSession();
-  const [accionID, setAccion] = useState(0);
-
+function Micartera({ wallet, entriesData }) {
   //#region variables sideNav
   const [state, setNavOpen] = useState(false);
 
@@ -22,7 +19,6 @@ function micartera({ wallet, entriesData }) {
   };
   //#endregion
 
-  console.log(wallet);
   return (
     <div>
       <SideNav click={closeNav} state={state} />
@@ -47,7 +43,7 @@ function micartera({ wallet, entriesData }) {
   );
 }
 
-export default micartera;
+export default Micartera;
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);

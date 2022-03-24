@@ -16,7 +16,7 @@ export default function Home() {
       <SideNav click={closeNav} state={state} />
 
       <div
-        className={`bg-gray-200 top-0 right-0 w-full h-full -z-100 ${
+        className={`bg-white top-0 right-0 w-full h-full -z-100 ${
           state ? "fixed" : "static"
         }`}
       >

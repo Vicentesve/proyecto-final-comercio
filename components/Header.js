@@ -118,7 +118,16 @@ function Header(props) {
                 )} ›`
               : "Sign In ›"}
           </p>
-          <UserCircleIcon className="h-7 mt-1" />
+          {session.user.name.substring(0, session.user.name.indexOf(" ")) ===
+          "Leticia" ? (
+            <img
+              className="h-10 w-10 mt-1 rounded-full"
+              src="letiperfil.jpg"
+              alt=""
+            />
+          ) : (
+            <UserCircleIcon className="h-7 mt-1" />
+          )}
         </div>
       </div>
     </header>

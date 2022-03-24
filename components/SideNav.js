@@ -6,8 +6,8 @@ import {
   ReceiptRefundIcon,
   LogoutIcon,
   LoginIcon,
+  CreditCardIcon,
 } from "@heroicons/react/outline";
-import { AiOutlineStock } from "react-icons/ai";
 
 import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -32,7 +32,7 @@ function SideNav(props) {
       </div>
 
       <nav
-        className={`w-6/12 fixed overflow-y-scroll overflow-x-hidden h-full z-100 top-0 left-0 bg-[#232F3E] text-white 
+        className={`w-6/12 fixed overflow-y-scroll overflow-x-hidden h-full z-100 top-0 left-0 bg-white text-[#232F3E] 
         ease-in-out duration-300  ${
           props.state ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -40,7 +40,7 @@ function SideNav(props) {
         {session ? (
           <div className="flex flex-col justify-between h-full">
             <div>
-              <div className="flex items-center space-x-1 p-2 mb-3 border-b border-white pb-3 bg-white text-[#232F3E]">
+              <div className="flex items-center space-x-1 p-2 mb-3 border-b border-white pb-3 bg-[#232F3E] text-white text-xl">
                 <HomeIcon className="h-5 mt-8" />
                 <h1 className="font-semibold text-sm mt-8">Menú principal</h1>
               </div>
@@ -64,7 +64,16 @@ function SideNav(props) {
 
                 <div className="elementsSideNav">
                   <ReceiptRefundIcon className="h-4" />
-                  <button>Vender acciones</button>
+                  <button onClick={() => router.push("/vender")}>
+                    Vender acciones
+                  </button>
+                </div>
+
+                <div className="elementsSideNav">
+                  <CreditCardIcon className="h-4" />
+                  <button onClick={() => router.push("/micartera")}>
+                    Mi cartera
+                  </button>
                 </div>
               </div>
             </div>

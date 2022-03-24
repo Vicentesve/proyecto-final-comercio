@@ -1,22 +1,57 @@
 import { async } from "@firebase/util";
-import { collection, getDocs } from "firebase/firestore";
-import { getSession } from "next-auth/react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { getSession, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import CurrencyFormat from "react-currency-format";
 import Swal from "sweetalert2";
 import Header from "../components/Header";
+import SideNav from "../components/SideNav";
+import Ticket from "../components/Ticket";
 import { db } from "../firebase/initFirebase";
 
 function Vender({ entriesData }) {
+  const { data: session } = useSession();
+
+  //#region useStates
+  const [acciones, setAcciones] = useState(entriesData);
   const [accionID, setAccion] = useState(0);
   const [cantVender, setCantVender] = useState();
   const [valorVender, setValorVender] = useState();
+  //#endregion
 
+  //#region variables sideNav
+  const [state, setNavOpen] = useState(false);
+
+  const openNav = () => {
+    setNavOpen(true);
+  };
+  const closeNav = () => {
+    setNavOpen(false);
+  };
+  //#endregion
+
+  //#region venderAcciones
   async function venderAcciones() {
-    let valor, cantidad, fecha, cambio, comision, total;
-    entriesData.map((accion) => {
+    let valor, cantidad, fecha, cambio, comision, total, nombre, urlImg;
+    acciones.map((accion) => {
       if (accion.id === accionID) {
         cantidad = accion.cantidad;
+        valor = accion.valor;
+        fecha = accion.fecha;
+        cambio = accion.cambio;
+        comision = accion.comision;
+        total = accion.total;
+        nombre = accion.nombre;
+        urlImg = accion.urlImg;
       }
     });
 
@@ -25,134 +60,167 @@ function Vender({ entriesData }) {
         icon: "warning",
         title: "No puedes vender mas acciones de las que tienes",
       });
+    } else if (cantVender == cantidad) {
+      alert("Eliminar");
+      await deleteDoc(doc(db, "users", session.user.email, "stocks", accionID));
     } else {
       const accion = {
         accionID,
+        cambio,
+        cantidad: cantidad - cantVender,
+        comision,
+        fecha,
+        nombre,
+        total: (cantidad - cantVender) * valor,
+        urlImg,
         valor,
       };
+
+      await setDoc(
+        doc(db, "users", session.user.email, "stocks", accionID),
+        accion
+      ).then(
+        Swal.fire({
+          icon: "success",
+          title: "Venta de la acción " + nombre + " exitosa!",
+          showConfirmButton: false,
+          timer: 1500,
+        })
+      );
+
+      setValorVender("");
+      setCantVender("");
     }
+
+    const querySnapshot = await getDocs(
+      collection(db, "users", session.user.email, "stocks")
+    );
+    const entriesData = querySnapshot.docs.map((entry) => ({
+      id: entry.id,
+      ...entry.data(),
+    }));
+
+    const q = query(
+      collection(db, "users", session.user.email, "myWallet"),
+      where("accionID", "==", accionID)
+    );
+
+    const queryWallet = await getDocs(q);
+    const myWallet = queryWallet.docs.map((entry) => ({
+      ...entry.data(),
+    }));
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        session.user.email,
+        "myWallet",
+        accionID + "_" + myWallet.length
+      ),
+      {
+        accionID,
+        tipo: "Venta",
+        monto: valorVender.replaceAll(",", "").replace("$", "") * cantVender,
+        fecha,
+        cantidad: parseInt(cantVender),
+      }
+    );
+
+    setAcciones(entriesData);
   }
+  //#endregion
 
   return (
     <div>
-      <Header />
-      <div className="flex flex-col items-center p-5 ">
-        <h1 className="mb-10 text-2xl font-bold">Venta de acciones</h1>
+      <SideNav click={closeNav} state={state} />
+      <Header click={openNav} />
+      <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
+        {acciones.length ? "Vender acciones" : "No tienes acciones"}
+      </h1>
 
-        <div className="flex space-x-5 w-full justify-center h-72">
-          <div className=" bg-gray-100 rounded-xl w-[40%] flex flex-col items-center p-5 space-y-5">
-            <h1 className="font-bold text-lg">Información de la acción</h1>
-            <select
-              value={accionID}
-              onChange={(e) => {
-                setAccion(e.target.value);
-              }}
-              className="rounded-sm text-sm p-1"
-            >
-              <option value={0}>Selecciona la acción a vender</option>
-              {entriesData.map((accion) => (
-                <option value={accion.id} key={accion.id}>
-                  {accion.id}
-                </option>
-              ))}
-            </select>
-
-            {entriesData.map((accion) => {
-              if (accion.id === accionID) {
-                return (
-                  <div key={accion.id} className="mt-5 ">
-                    <div className="mb-2 justify-center flex">
-                      <p className="font-bold text-lg">{accion.id}</p>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <p className="font-semibold">Valor:</p>
-                      <CurrencyFormat
-                        value={accion.valor}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"$"}
-                        renderText={(value) => <p>{value}</p>}
-                      />
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <p className="font-semibold">Cantidad:</p>
-                      <p>{accion.cantidad}</p>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <p className="font-semibold">Última fecha de compra:</p>
-                      <p>{accion.fecha}</p>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <p className="font-semibold">Comisión:</p>
-                      <p>{accion.comision}%</p>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <p className="font-semibold">Total:</p>
-                      <CurrencyFormat
-                        value={accion.total}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        prefix={"$"}
-                        renderText={(value) => <p>{value}</p>}
-                      />
-                    </div>
+      {acciones.length ? (
+        <div className="p-4 sm:w-[60%] m-auto md:w-[50%] lg:w-[40%] xl:w-[30%]">
+          <div className="border border-[#c7bbbb] shadow-lg rounded-lg p-2">
+            {/* Seleccionar acción a comprar */}
+            <div className="shadow-lg rounded-md">
+              <select
+                onChange={(e) => {
+                  setAccion(e.target.value);
+                }}
+                className="w-full p-1 text-sm bg-gray-50 rounded-md"
+              >
+                {accionID === 0 ? (
+                  <option value={0}>Selecciona la acción a vender</option>
+                ) : (
+                  <></>
+                )}
+                {acciones.map((accion, i) => (
+                  <option key={i} value={accion.id}>
+                    {accion.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          {acciones.map((accion) => {
+            if (accion.id === accionID) {
+              return (
+                <div key={accion.id} className="relative my-5">
+                  <Ticket
+                    id={accion.id}
+                    nombre={accion.nombre}
+                    fecha={accion.fecha}
+                    cantidad={accion.cantidad}
+                    valor={accion.valor}
+                    comision={accion.comision}
+                    total={accion.total}
+                    urlImg={accion.urlImg}
+                  />
+                  {/* Valor de la accion */}
+                  <div className="text-sm mt-5 flex flex-col space-y-1">
+                    <h3>Ingresa el valor de la acción a vender</h3>
+                    <CurrencyFormat
+                      value={valorVender}
+                      onChange={(e) => {
+                        setValorVender(e.target.value);
+                      }}
+                      className="w-full border border-[#c7bbbb] rounded-md p-1"
+                      thousandSeparator={true}
+                      placeholder="Valor de la acción"
+                      allowNegative={false}
+                      prefix={"$"}
+                    />
                   </div>
-                );
-              }
-            })}
-          </div>
-
-          <div className=" bg-gray-100 rounded-xl w-[40%] flex flex-col items-center p-5 space-y-5">
-            <h1 className="font-bold text-lg">
-              Venta de la acción: {accionID != 0 ? accionID : ""}
-            </h1>
-            {accionID != 0 && (
-              <div className="flex flex-col items-center space-y-6">
-                <div className="w-full">
-                  <p className="mb-2 font-semibold">
-                    ¿Cuántas acciones quieres vender?
-                  </p>
-                  <input
-                    value={cantVender}
-                    onChange={(e) => {
-                      setCantVender(e.currentTarget.value.replace(/\D/g, ""));
-                    }}
-                    className="w-full p-1 border-gray-500 text-sm"
-                    type="text"
-                  />
+                  {/* Cantidad */}
+                  <div className="text-sm mt-3 flex flex-col space-y-1">
+                    <h3>Ingresa la catidad de acciones a vender</h3>
+                    <input
+                      value={cantVender}
+                      onChange={(e) => {
+                        setCantVender(e.target.value.replace(/\D/g, ""));
+                      }}
+                      className="w-full border border-[#c7bbbb] rounded-md p-1"
+                      type="text"
+                      placeholder="Número de acciones"
+                    />
+                  </div>
+                  <div className="flex justify-center">
+                    <button
+                      onClick={venderAcciones}
+                      className="mt-10 button block"
+                    >
+                      Vender
+                    </button>
+                  </div>
                 </div>
-
-                <div className="w-full">
-                  <p className="mb-2 font-semibold">
-                    Ingresa el valor de las acciones
-                  </p>
-                  <input
-                    value={valorVender}
-                    onChange={(e) => {
-                      setValorVender(
-                        e.currentTarget.value
-                          .replace(/[^0-9.]/g, "")
-                          .replace(/(\..*?)\..*/g, "$1")
-                      );
-                    }}
-                    className="w-full p-1 border-gray-500 text-sm"
-                    type="text"
-                  />
-                </div>
-
-                <button onClick={venderAcciones} className=" mt-14 button">
-                  Vender
-                </button>
-              </div>
-            )}
-          </div>
+              );
+            }
+          })}
         </div>
-      </div>
+      ) : (
+        <img src="noStock.jpg" alt="" />
+      )}
     </div>
   );
 }

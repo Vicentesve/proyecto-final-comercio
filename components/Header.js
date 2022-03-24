@@ -7,6 +7,7 @@ import {
   ReceiptRefundIcon,
   ShoppingBagIcon,
   UserCircleIcon,
+  CreditCardIcon,
 } from "@heroicons/react/outline";
 import { BiUser } from "react-icons/bi";
 import Swal from "sweetalert2";
@@ -20,7 +21,7 @@ function Header(props) {
       <div className="sm:hidden flex items-center justify-between p-2 bg-[#232F3E] text-white">
         <div className="flex space-x-2">
           <MenuIcon onClick={props.click} className="h-7 mt-[2px]" />
-          <img className="h-7" src="/logo.png" alt="" />
+          <img className="h-7" src="/logo2.png" alt="" />
         </div>
         <div className="flex items-center space-x-1">
           <p
@@ -42,30 +43,39 @@ function Header(props) {
         <div className="flex">
           <img className="h-12" src="/logo2.png" alt="" />
           <div className="ml-10 flex space-x-10 mt-2">
-            <div className="elementsNav">
+            <div
+              onClick={() => {
+                if (session) {
+                  router.push("/misacciones");
+                } else {
+                  Swal.fire({
+                    icon: "warning",
+                    title: "Inicia sesión para ver tus acciones",
+                  });
+                }
+              }}
+              className="elementsNav"
+            >
               <ChartBarIcon className="h-4" />
-              <button
-                onClick={() => {
-                  if (session) {
-                    router.push("/misacciones");
-                  } else {
-                    Swal.fire({
-                      icon: "warning",
-                      title: "Inicia sesión para ver tus acciones",
-                    });
-                  }
-                }}
-              >
-                Mis acciones
-              </button>
+              <button>Mis acciones</button>
             </div>
-            <div className="elementsNav">
+            <div
+              onClick={() => router.push("/comprar")}
+              className="elementsNav"
+            >
               <ShoppingBagIcon className="h-4" />
               <button>Comprar acciones</button>
             </div>
-            <div className="elementsNav">
+            <div onClick={() => router.push("/vender")} className="elementsNav">
               <ReceiptRefundIcon className="h-4" />
               <button>Vender acciones</button>
+            </div>
+            <div
+              onClick={() => router.push("/micartera")}
+              className="elementsNav"
+            >
+              <CreditCardIcon className="h-4" />
+              <button>Mi cartera</button>
             </div>
           </div>
         </div>

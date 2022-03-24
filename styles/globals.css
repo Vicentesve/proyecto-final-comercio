@@ -5,10 +5,6 @@
 .button {
   @apply bg-[#232F3E] hover:bg-[#3d5068] text-white w-40 text-base font-semibold py-2 px-8 rounded-lg whitespace-nowrap;
 }
-.buttonDis {
-  @apply bg-[#cccc] border border-[#9999] text-[#6666] w-40 text-lg font-bold py-2 px-8 rounded-lg whitespace-nowrap cursor-not-allowed;
-}
-
 .divComprar {
   @apply flex w-72 space-x-2 justify-center;
 }
@@ -20,7 +16,10 @@
 .elementsNav {
   @apply flex items-center space-x-2 border-b border-[#232F3E] hover:border-b hover:border-white whitespace-nowrap;
 }
-
 .elementsSideNav {
-  @apply flex items-center  space-x-2 hover:bg-[#3d5068] rounded-md p-1 text-xs;
+  @apply flex items-center space-x-2 hover:bg-[#3d5068] hover:text-white rounded-md p-1 text-xs;
+}
+
+.tableMyWallet {
+  @apply border-r border-[#c7bbbb] p-1 text-sm;
 }

@@ -3,9 +3,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import { DotButton } from "./EmblaCarouselButtons";
 import Ticket from "./Ticket";
 
-const numberWithinRange = (number, min, max) =>
-  Math.min(Math.max(number, min), max);
-
 function EmblaCarousel({ acciones }) {
   //#region Configuration Embla
   const [viewportRef, embla] = useEmblaCarousel({ skipSnaps: false });

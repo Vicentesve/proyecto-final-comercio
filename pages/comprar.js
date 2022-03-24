@@ -1,7 +1,16 @@
 import React, { useState } from "react";
 import Header from "../components/Header";
 import { getSession, useSession } from "next-auth/react";
-import { setDoc, doc, getDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  getDoc,
+  getDocs,
+  collection,
+  addDoc,
+  where,
+  query,
+} from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
 import Swal from "sweetalert2";
 import CurrencyFormat from "react-currency-format";
@@ -18,7 +27,6 @@ function Comprar() {
   const [cantidad, setCantidad] = useState("");
   const [comision, setComision] = useState("");
   const [urlImg, setUrlImg] = useState("");
-
   const [fecha, setFecha] = useState();
   //#endregion
 
@@ -67,10 +75,11 @@ function Comprar() {
         accionID,
         nombre,
         valor:
-          (valor.replaceAll(",", "").replace("$", "") * parseInt(cantidad) +
+          (parseFloat(valor.replaceAll(",", "").replace("$", "")) *
+            parseInt(cantidad) +
             docSnap.data().total) /
           (parseInt(cantidad) + docSnap.data().cantidad),
-        cambio: parseFloat(cambio),
+        cambio: parseFloat(cambio.replace("$", "")),
         cantidad: parseInt(cantidad) + docSnap.data().cantidad,
         comision: parseFloat(comision),
         fecha,
@@ -103,6 +112,33 @@ function Comprar() {
         showConfirmButton: false,
         timer: 1500,
       })
+    );
+
+    const q = query(
+      collection(db, "users", session.user.email, "myWallet"),
+      where("accionID", "==", accionID)
+    );
+
+    const querySnapshot = await getDocs(q);
+    const entriesData = querySnapshot.docs.map((entry) => ({
+      ...entry.data(),
+    }));
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        session.user.email,
+        "myWallet",
+        accionID + "_" + entriesData.length
+      ),
+      {
+        accionID,
+        tipo: "Compra",
+        monto: valor.replaceAll(",", "").replace("$", "") * parseInt(cantidad),
+        fecha,
+        cantidad: parseInt(cantidad),
+      }
     );
   }
   //#endregion
@@ -157,7 +193,7 @@ function Comprar() {
       <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
         Comprar acciones
       </h1>
-      <div className="p-4">
+      <div className="p-4 sm:w-[60%] m-auto md:w-[50%] lg:w-[40%] xl:w-[30%]">
         <div className="border border-[#c7bbbb] shadow-lg rounded-lg p-2">
           {/* Seleccionar acción a comprar */}
           <div className="shadow-lg  rounded-md">
@@ -174,9 +210,7 @@ function Comprar() {
               className="w-full p-1 text-sm bg-gray-50 rounded-md"
             >
               {accionID === 0 ? (
-                <option className="font-semibold" value={0}>
-                  Selecciona la acción a comprar
-                </option>
+                <option value={0}>Selecciona la acción a comprar</option>
               ) : (
                 <></>
               )}
@@ -262,9 +296,12 @@ function Comprar() {
           </div>
 
           {/* Fecha */}
-          <div className="text-sm mt-3">
+          <div className="text-sm mt-3 flex items-center space-x-1 border border-[#c7bbbb] rounded-md p-1">
+            <p className="whitespace-nowrap text-sm font-semibold">
+              Fecha de compra:
+            </p>
             <input
-              className="w-full border border-[#c7bbbb] rounded-md p-1"
+              className="w-full"
               type="date"
               onChange={(e) => {
                 setFecha(e.target.value);
@@ -272,6 +309,7 @@ function Comprar() {
             />
           </div>
 
+          {/* Botón comprar  */}
           <div className="flex justify-center mt-6">
             <button
               onClick={() => {

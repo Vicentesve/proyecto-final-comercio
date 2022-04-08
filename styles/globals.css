@@ -15,7 +15,7 @@
 
 .elementsNav {
   @apply flex items-center space-x-2  whitespace-nowrap transition 
-  duration-100 transform hover:scale-110;
+  duration-100 transform hover:scale-105 cursor-default;
 }
 .elementsSideNav {
   @apply flex items-center space-x-2 hover:bg-[#3d5068] hover:text-white rounded-md p-1 text-xs;
@@ -23,4 +23,9 @@
 
 .tableMyWallet {
   @apply border-r border-[#c7bbbb] p-1 text-sm;
+}
+
+.subElementsNav {
+  @apply flex items-center space-x-1 border-b border-white hover:border-[#3d5068] 
+  text-[#3d5068] cursor-pointer w-fit whitespace-nowrap;
 }

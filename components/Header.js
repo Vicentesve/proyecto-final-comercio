@@ -8,9 +8,18 @@ import {
   ShoppingBagIcon,
   UserCircleIcon,
   CreditCardIcon,
+  PresentationChartBarIcon,
+  PresentationChartLineIcon,
+  ChartPieIcon,
 } from "@heroicons/react/outline";
 import { BiUser } from "react-icons/bi";
+import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
 import Swal from "sweetalert2";
+
+// Exports
+export const HoverCard = HoverCardPrimitive.Root;
+export const HoverCardTrigger = HoverCardPrimitive.Trigger;
+export const HoverCardContent = HoverCardPrimitive.HoverCardContent;
 
 function Header(props) {
   const router = useRouter();
@@ -25,74 +34,167 @@ function Header(props) {
         </div>
 
         <div className="scrollbar-hide overflow-x-scroll hidden sm:space-x-5 md:space-x-10 mt-2 sm:flex px-1">
-          <div
-            onClick={() => {
-              if (session) {
-                router.push("/misacciones");
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "Inicia sesión para ver tus acciones",
-                });
-              }
-            }}
-            className="elementsNav"
-          >
-            <ChartBarIcon className="h-4" />
-            <button>Mis acciones</button>
+          <div className="elementsNav">
+            <PresentationChartBarIcon className="h-4" />
+            <HoverCard>
+              <HoverCardTrigger>
+                <p>Mercado de capitales</p>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-60 bg-white border border-[#c7bbbb] rounded-md shadow-md p-2">
+                <div className="flex flex-col space-y-3">
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/misacciones");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para ver tus acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ChartBarIcon className="h-4" />
+                    <button>Mis acciones</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/comprar");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión comprar acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ShoppingBagIcon className="h-4" />
+                    <button>Comprar acciones</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/vender");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para vender acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ReceiptRefundIcon className="h-4" />
+                    <button>Vender acciones</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/micartera");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para ver tu cartera",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <CreditCardIcon className="h-4" />
+                    <button>Mi cartera</button>
+                  </div>
+                </div>
+                <HoverCardPrimitive.HoverCardArrow className="fill-white" />
+              </HoverCardContent>
+            </HoverCard>
           </div>
 
-          <div
-            onClick={() => {
-              if (session) {
-                router.push("/comprar");
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "Inicia sesión comprar acciones",
-                });
-              }
-            }}
-            className="elementsNav"
-          >
-            <ShoppingBagIcon className="h-4" />
-            <button>Comprar acciones</button>
-          </div>
+          <div className="elementsNav">
+            <PresentationChartLineIcon className="h-4" />
+            <HoverCard>
+              <HoverCardTrigger>
+                <p>Mercado de derivados</p>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-60 bg-white border border-[#c7bbbb] rounded-md shadow-md p-2">
+                <div className="flex flex-col space-y-3">
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/misnotas");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para ver tus acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ChartPieIcon className="h-4" />
+                    <button>Mis notas estructuradas</button>
+                  </div>
 
-          <div
-            onClick={() => {
-              if (session) {
-                router.push("/vender");
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "Inicia sesión para vender acciones",
-                });
-              }
-            }}
-            className="elementsNav"
-          >
-            <ReceiptRefundIcon className="h-4" />
-            <button>Vender acciones</button>
-          </div>
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/comprarfuturos");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión comprar acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ShoppingBagIcon className="h-4" />
+                    <button>Comprar futuros</button>
+                  </div>
 
-          <div
-            onClick={() => {
-              if (session) {
-                router.push("/micartera");
-              } else {
-                Swal.fire({
-                  icon: "warning",
-                  title: "Inicia sesión para ver tu cartera",
-                });
-              }
-            }}
-            className="elementsNav"
-          >
-            <CreditCardIcon className="h-4" />
-            <button>Mi cartera</button>
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/venderfuturos");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para vender acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ReceiptRefundIcon className="h-4" />
+                    <button>Vender futuros</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/micarterafuturos");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para ver tu cartera",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <CreditCardIcon className="h-4" />
+                    <button>Mi cartera</button>
+                  </div>
+                </div>
+                <HoverCardPrimitive.HoverCardArrow className="fill-white" />
+              </HoverCardContent>
+            </HoverCard>
           </div>
-          <div className="absolute top-0 right-52 bg-gradient-to-l from-[#232F3E] h-20 w-1/12" />
         </div>
 
         <div

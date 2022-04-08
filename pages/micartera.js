@@ -34,7 +34,7 @@ function Micartera({ wallet, entriesData }) {
       <div className="m-auto p-4">
         {Object.entries(wallet).length > 0 ? (
           <>
-            <div className="sm:w-[60%] md:w-[50%] lg:w-[40%] m-auto border border-[#c7bbbb] shadow-lg rounded-lg p-2">
+            <div className="sm:w-[60%] md:w-[50%] lg:w-[40%] m-auto border border-[#c7bbbb] shadow-lg rounded-lg p-2 ">
               <WalletCarousel myWallet={wallet} entriesData={entriesData} />
             </div>
           </>

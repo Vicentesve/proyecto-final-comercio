@@ -10,6 +10,7 @@ function Ticket({
   comision,
   total,
   urlImg,
+  iva,
 }) {
   const componentRef = useRef();
   const { width, height } = useContainerDimensions(componentRef);
@@ -41,7 +42,7 @@ function Ticket({
                 />
               </div>
 
-              <div className="flex justify-between p-4">
+              <div className="flex justify-between p-4 flex-wrap">
                 <div>
                   <p className="font-semibold text-sm">Fecha</p>
                   <p className="text-sm">{fecha}</p>
@@ -55,6 +56,10 @@ function Ticket({
                   <p className="text-sm">{comision}%</p>
                 </div>
                 <div>
+                  <p className="font-semibold text-sm">IVA</p>
+                  <p className="text-sm">{iva}%</p>
+                </div>
+                <div>
                   <p className="font-semibold text-sm">Valor</p>
                   <CurrencyFormat
                     className="text-sm"
@@ -63,6 +68,7 @@ function Ticket({
                     thousandSeparator={true}
                     prefix={"$"}
                     renderText={(value) => <p>{value}</p>}
+                    decimalScale={2}
                   />
                 </div>
               </div>
@@ -77,6 +83,7 @@ function Ticket({
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}
+                  decimalScale={2}
                   renderText={(value) => <p>{value}</p>}
                 />
               </div>

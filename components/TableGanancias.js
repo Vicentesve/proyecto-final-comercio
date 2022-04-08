@@ -19,32 +19,34 @@ function TableGanancias({ llave, value, myWallet }) {
     });
 
     return (
-      <div className="mt-10">
-        <CurrencyFormat
-          value={ganacias}
-          displayType={"text"}
-          thousandSeparator={true}
-          prefix={"$"}
-          renderText={(value) => (
-            <p
-              className={`font-semibold text-right ${
-                ganacias < 0 ? "text-red-600" : "text-green-600"
-              }`}
-            >
-              Ganancia: {value}
-            </p>
-          )}
-        />
-      </div>
+      <CurrencyFormat
+        value={ganacias}
+        displayType={"text"}
+        thousandSeparator={true}
+        prefix={"$"}
+        decimalScale={2}
+        renderText={(value) => (
+          <p
+            className={`font-semibold text-right ${
+              ganacias < 0 ? "text-red-600" : "text-green-600"
+            }`}
+          >
+            Ganancia: {value}
+          </p>
+        )}
+      />
     );
   }
   //#endregion
 
   return (
-    <div className="flex flex-col justify-between h-full">
+    <div className="flex flex-col justify-between h-[400px] overflow-y-scroll scrollbar-hide">
       <div>
-        <h1 className="font-semibold">{llave}</h1>
-        <table className="w-full text-left mt-2 text-sm">
+        <div className="flex justify-between mb-10">
+          <h1 className="font-semibold">{llave}</h1>
+          {getGanacias(llave)}
+        </div>
+        <table className="w-full text-left mt-2 text-xs sm:text-sm ">
           <tbody>
             <tr className="text-sm text-left">
               <th>Descripción</th>
@@ -52,7 +54,7 @@ function TableGanancias({ llave, value, myWallet }) {
               <th>Fecha</th>
             </tr>
             {value.map((wallet, i) => (
-              <tr key={i}>
+              <tr className=" " key={i}>
                 <td className="flex items-center space-x-1">
                   {wallet.tipo === "Compra" ? (
                     <ShoppingBagIcon className="h-4 mt-[1px]" />
@@ -79,7 +81,6 @@ function TableGanancias({ llave, value, myWallet }) {
           </tbody>
         </table>
       </div>
-      {getGanacias(llave)}
     </div>
   );
 }

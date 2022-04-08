@@ -1,4 +1,3 @@
-import { async } from "@firebase/util";
 import {
   collection,
   deleteDoc,
@@ -41,7 +40,7 @@ function Vender({ entriesData }) {
 
   //#region venderAcciones
   async function venderAcciones() {
-    let valor, cantidad, fecha, cambio, comision, total, nombre, urlImg;
+    let valor, cantidad, fecha, cambio, comision, total, iva, nombre, urlImg;
     acciones.map((accion) => {
       if (accion.id === accionID) {
         cantidad = accion.cantidad;
@@ -52,14 +51,26 @@ function Vender({ entriesData }) {
         total = accion.total;
         nombre = accion.nombre;
         urlImg = accion.urlImg;
+        iva = accion.iva;
       }
     });
+
+    let pTotal = valorVender * cantVender;
+    let pComision = (pTotal / 100) * 1;
+    let pIVA = (pComision / 100) * 16;
+    let pTotalFinal = pTotal - pComision - pIVA;
+
+    let pTotalStock = (cantidad - cantVender) * valor;
+    let pComisionStock = (pTotalStock / 100) * 1;
+    let pIVAStock = (pComisionStock / 100) * 16;
+    let pTotalFinalStock = pTotalStock - pComisionStock - pIVAStock;
 
     if (cantVender > cantidad) {
       Swal.fire({
         icon: "warning",
         title: "No puedes vender mas acciones de las que tienes",
       });
+      return;
     } else if (cantVender == cantidad) {
       await deleteDoc(doc(db, "users", session.user.email, "stocks", accionID));
       Swal.fire({
@@ -74,9 +85,10 @@ function Vender({ entriesData }) {
         cambio,
         cantidad: cantidad - cantVender,
         comision,
+        iva,
         fecha,
         nombre,
-        total: (cantidad - cantVender) * valor,
+        total: pTotalFinalStock,
         urlImg,
         valor,
       };
@@ -126,7 +138,7 @@ function Vender({ entriesData }) {
       {
         accionID,
         tipo: "Venta",
-        monto: valorVender.replaceAll(",", "").replace("$", "") * cantVender,
+        monto: pTotalFinal,
         fecha,
         cantidad: parseInt(cantVender),
       }
@@ -181,6 +193,7 @@ function Vender({ entriesData }) {
                     comision={accion.comision}
                     total={accion.total}
                     urlImg={accion.urlImg}
+                    iva={accion.iva}
                   />
 
                   {/* Valor de la accion */}
@@ -189,7 +202,9 @@ function Vender({ entriesData }) {
                     <CurrencyFormat
                       value={valorVender}
                       onChange={(e) => {
-                        setValorVender(e.target.value);
+                        setValorVender(
+                          e.target.value.replaceAll(",", "").replace("$", "")
+                        );
                       }}
                       className="w-full border border-[#c7bbbb] rounded-md p-1"
                       thousandSeparator={true}

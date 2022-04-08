@@ -45,6 +45,7 @@ function MisAcciones({ entriesData }) {
                     cantidad={accion.cantidad}
                     valor={accion.valor}
                     comision={accion.comision}
+                    iva={accion.iva}
                     total={accion.total}
                     urlImg={accion.urlImg}
                   />

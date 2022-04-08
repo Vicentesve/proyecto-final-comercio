@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^1.0.6",
+    "@radix-ui/react-hover-card": "^0.1.5",
     "embla-carousel-react": "^6.2.0",
     "firebase": "^9.6.8",
     "firebase-admin": "^10.0.2",
@@ -22,6 +23,7 @@
     "react-icons": "^4.3.1",
     "sweetalert2": "^11.4.4",
     "tailwind-scrollbar-hide": "^1.1.7",
+    "tailwindcss-radix": "^1.6.0",
     "underscore": "^1.13.2"
   },
   "devDependencies": {

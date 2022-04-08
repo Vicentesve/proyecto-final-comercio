@@ -7,7 +7,6 @@ import {
   getDoc,
   getDocs,
   collection,
-  addDoc,
   where,
   query,
 } from "firebase/firestore";
@@ -25,7 +24,8 @@ function Comprar() {
   const [valor, setValor] = useState("");
   const [cambio, setCambio] = useState("");
   const [cantidad, setCantidad] = useState("");
-  const [comision, setComision] = useState("");
+  const [comision, setComision] = useState(1);
+  const [iva, setIVA] = useState(16);
   const [urlImg, setUrlImg] = useState("");
   const [fecha, setFecha] = useState();
   //#endregion
@@ -68,37 +68,47 @@ function Comprar() {
     const docRef = doc(db, "users", session.user.email, "stocks", accionID);
     const docSnap = await getDoc(docRef);
 
-    var accion = {};
+    //#region Conversiones
+    parseFloat(valor);
+    parseFloat(cambio);
+    parseInt(cantidad);
+    parseFloat(comision);
+    parseFloat(iva);
+    //#endregion
+
+    let accion = {};
+    let pTotal = valor * cantidad;
+    let pComision = (pTotal / 100) * comision;
+    let pIVA = (pComision / 100) * iva;
+    let pTotalFinal = pTotal + pComision + pIVA;
 
     if (docSnap.exists()) {
       accion = {
         accionID,
         nombre,
         valor:
-          (parseFloat(valor.replaceAll(",", "").replace("$", "")) *
-            parseInt(cantidad) +
-            docSnap.data().total) /
-          (parseInt(cantidad) + docSnap.data().cantidad),
-        cambio: parseFloat(cambio.replace("$", "")),
-        cantidad: parseInt(cantidad) + docSnap.data().cantidad,
-        comision: parseFloat(comision),
+          (pTotalFinal + docSnap.data().total) /
+          (cantidad + docSnap.data().cantidad),
+        cambio,
+        cantidad: cantidad + docSnap.data().cantidad,
+        comision,
+        iva,
         fecha,
         urlImg,
-        total:
-          valor.replaceAll(",", "").replace("$", "") * parseInt(cantidad) +
-          docSnap.data().total,
+        total: pTotalFinal + docSnap.data().total,
       };
     } else {
       accion = {
         accionID,
         nombre,
-        valor: parseFloat(valor.replaceAll(",", "").replace("$", "")),
-        cambio: parseFloat(cambio),
+        valor: parseFloat(valor),
+        cambio,
         cantidad: parseInt(cantidad),
-        comision: parseFloat(comision),
+        comision,
+        iva,
         fecha,
         urlImg,
-        total: valor.replaceAll(",", "").replace("$", "") * cantidad,
+        total: pTotalFinal,
       };
     }
 
@@ -135,9 +145,9 @@ function Comprar() {
       {
         accionID,
         tipo: "Compra",
-        monto: valor.replaceAll(",", "").replace("$", "") * parseInt(cantidad),
+        monto: pTotalFinal,
         fecha,
-        cantidad: parseInt(cantidad),
+        cantidad,
       }
     );
   }
@@ -244,7 +254,7 @@ function Comprar() {
             <CurrencyFormat
               value={valor}
               onChange={(e) => {
-                setValor(e.target.value);
+                setValor(e.target.value.replaceAll(",", "").replace("$", ""));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               thousandSeparator={true}
@@ -272,10 +282,24 @@ function Comprar() {
             <CurrencyFormat
               value={comision}
               onChange={(e) => {
-                setComision(e.target.value);
+                setComision(e.target.value.replace("%", ""));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               placeholder="Comisión de la acción"
+              allowNegative={true}
+              suffix={"%"}
+            />
+          </div>
+
+          {/* IVA */}
+          <div className="text-sm mt-3">
+            <CurrencyFormat
+              value={iva}
+              onChange={(e) => {
+                setIVA(e.target.value.replace("%", ""));
+              }}
+              className="w-full border border-[#c7bbbb] rounded-md p-1"
+              placeholder="IVA"
               allowNegative={true}
               suffix={"%"}
             />
@@ -286,7 +310,7 @@ function Comprar() {
             <CurrencyFormat
               value={cambio}
               onChange={(e) => {
-                setCambio(e.target.value);
+                setCambio(e.target.value.replace("$", ""));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               placeholder="Tipo de cambio"

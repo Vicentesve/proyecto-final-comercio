@@ -4,9 +4,8 @@ import React, { useState } from "react";
 import { getSession } from "next-auth/react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
-import _, { groupBy } from "underscore";
+import _ from "underscore";
 import WalletCarousel from "../components/WalletCarousel";
-import TableGanancias from "../components/TableGanancias";
 
 function Micartera({ wallet, entriesData }) {
   //#region variables sideNav

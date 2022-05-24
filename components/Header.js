@@ -126,7 +126,7 @@ function Header(props) {
                   <div
                     onClick={() => {
                       if (session) {
-                        router.push("/misnotas");
+                        router.push("/misfuturos");
                       } else {
                         Swal.fire({
                           icon: "warning",
@@ -137,7 +137,7 @@ function Header(props) {
                     className="subElementsNav"
                   >
                     <ChartPieIcon className="h-4" />
-                    <button>Mis notas estructuradas</button>
+                    <button>Mis futuros</button>
                   </div>
 
                   <div
@@ -160,7 +160,7 @@ function Header(props) {
                   <div
                     onClick={() => {
                       if (session) {
-                        router.push("/venderfuturos");
+                        router.push("/vender-futuros");
                       } else {
                         Swal.fire({
                           icon: "warning",
@@ -177,7 +177,7 @@ function Header(props) {
                   <div
                     onClick={() => {
                       if (session) {
-                        router.push("/micarterafuturos");
+                        router.push("/mi-cartera-futuros");
                       } else {
                         Swal.fire({
                           icon: "warning",

@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@heroicons/react": "^1.0.6",
+    "@mui/material": "^5.7.0",
     "@radix-ui/react-hover-card": "^0.1.5",
     "embla-carousel-react": "^6.2.0",
     "firebase": "^9.6.8",

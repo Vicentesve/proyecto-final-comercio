@@ -24,7 +24,7 @@ function Comprar() {
   const [valor, setValor] = useState("");
   const [cambio, setCambio] = useState("");
   const [cantidad, setCantidad] = useState("");
-  const [comision, setComision] = useState(1);
+  const [comision, setComision] = useState("");
   const [iva, setIVA] = useState(16);
   const [urlImg, setUrlImg] = useState("");
   const [fecha, setFecha] = useState();
@@ -68,14 +68,6 @@ function Comprar() {
     const docRef = doc(db, "users", session.user.email, "stocks", accionID);
     const docSnap = await getDoc(docRef);
 
-    //#region Conversiones
-    parseFloat(valor);
-    parseFloat(cambio);
-    parseInt(cantidad);
-    parseFloat(comision);
-    parseFloat(iva);
-    //#endregion
-
     let accion = {};
     let pTotal = valor * cantidad;
     let pComision = (pTotal / 100) * comision;
@@ -101,9 +93,9 @@ function Comprar() {
       accion = {
         accionID,
         nombre,
-        valor: parseFloat(valor),
+        valor,
         cambio,
-        cantidad: parseInt(cantidad),
+        cantidad,
         comision,
         iva,
         fecha,
@@ -254,7 +246,15 @@ function Comprar() {
             <CurrencyFormat
               value={valor}
               onChange={(e) => {
-                setValor(e.target.value.replaceAll(",", "").replace("$", ""));
+                e.target.value !== ""
+                  ? setValor(
+                      parseFloat(
+                        e.target.value.replaceAll(",", "").replace("$", "")
+                      )
+                    )
+                  : setValor(
+                      e.target.value.replaceAll(",", "").replace("$", "")
+                    );
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               thousandSeparator={true}
@@ -269,10 +269,10 @@ function Comprar() {
             <input
               value={cantidad}
               onChange={(e) => {
-                setCantidad(e.target.value.replace(/\D/g, ""));
+                setCantidad(parseInt(e.target.value.replace(/\D/g, "")));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
-              type="text"
+              type="number"
               placeholder="Número de acciones"
             />
           </div>
@@ -282,7 +282,9 @@ function Comprar() {
             <CurrencyFormat
               value={comision}
               onChange={(e) => {
-                setComision(e.target.value.replace("%", ""));
+                e.target.value !== ""
+                  ? setComision(parseFloat(e.target.value.replace("%", "")))
+                  : setComision(e.target.value.replace("%", ""));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               placeholder="Comisión de la acción"
@@ -296,7 +298,9 @@ function Comprar() {
             <CurrencyFormat
               value={iva}
               onChange={(e) => {
-                setIVA(e.target.value.replace("%", ""));
+                e.target.value !== ""
+                  ? setIVA(parseFloat(e.target.value.replace("%", "")))
+                  : setIVA(e.target.value.replace("%", ""));
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               placeholder="IVA"
@@ -310,7 +314,15 @@ function Comprar() {
             <CurrencyFormat
               value={cambio}
               onChange={(e) => {
-                setCambio(e.target.value.replace("$", ""));
+                e.target.value !== ""
+                  ? setCambio(
+                      parseFloat(
+                        e.target.value.replaceAll(",", "").replace("$", "")
+                      )
+                    )
+                  : setCambio(
+                      e.target.value.replaceAll(",", "").replace("$", "")
+                    );
               }}
               className="w-full border border-[#c7bbbb] rounded-md p-1"
               placeholder="Tipo de cambio"

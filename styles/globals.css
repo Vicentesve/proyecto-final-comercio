@@ -29,3 +29,11 @@
   @apply flex items-center space-x-1 border-b border-white hover:border-[#3d5068] 
   text-[#3d5068] cursor-pointer w-fit whitespace-nowrap;
 }
+
+th {
+  @apply px-5 py-2 text-[#232F3E] text-lg;
+}
+
+td {
+  @apply px-5 border-t border-gray-400;
+}

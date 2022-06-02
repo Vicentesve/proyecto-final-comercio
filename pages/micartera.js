@@ -38,7 +38,11 @@ function Micartera({ wallet, entriesData }) {
             </div>
           </>
         ) : (
-          <img src="bgNoWallet.png" alt="" />
+          <img
+            className="object-contain sm:w-[60%] md:w-[50%] lg:w-[40%] xl:w-[30%] m-auto"
+            src="bgNoWallet.png"
+            alt=""
+          />
         )}
       </div>
     </div>

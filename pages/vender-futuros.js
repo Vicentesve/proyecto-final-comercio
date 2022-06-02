@@ -18,7 +18,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import TicketFuturo from "./../components/TicketFuturo";
-import { async } from "@firebase/util";
+import funcionesPDF from "./../functions/setCartaConfirmacion";
 
 function VenderFuturo({ entriesData }) {
   const { data: session } = useSession();
@@ -28,18 +28,15 @@ function VenderFuturo({ entriesData }) {
   const [futuroID, setFuturoID] = useState(0);
   const [tarifa, setTarifa] = useState();
   const [inversion, setInversion] = useState();
+  const options = { style: "currency", currency: "USD" };
+  const numberFormat = new Intl.NumberFormat("en-US", options);
+  const { setCarta } = funcionesPDF();
 
   //#endregion
 
   //#region Vender futuro
   async function venderFuturo() {
     await deleteDoc(doc(db, "users", session.user.email, "futuros", futuroID));
-    Swal.fire({
-      icon: "success",
-      title: "Venta del futuro exitosa!",
-      showConfirmButton: false,
-      timer: 1500,
-    });
 
     const querySnapshot = await getDocs(
       collection(db, "users", session.user.email, "futuros")
@@ -61,9 +58,25 @@ function VenderFuturo({ entriesData }) {
     const docSnap = await getDoc(docRef);
 
     let precio_venta = tarifa;
+
     let ganancia =
-      docSnap.data().tarifa * docSnap.data().inversion +
-      precio_venta * docSnap.data().inversion;
+      (precio_venta - docSnap.data().tarifa) * docSnap.data().unidad;
+
+    let table = {
+      "Tipo de operación": "Venta de futuros",
+      Instrumento: "MXN/USD",
+      Mercado: "Derivados",
+      Portafolio: "Simply Wallet St",
+      Compra: docSnap.data().nombre,
+      "Buy/Sell": "Sell",
+      "Fecha de ejecución": docSnap.data().fecha,
+      "Tarifa contratada": numberFormat.format(tarifa),
+      Inversión: numberFormat.format(docSnap.data().inversion),
+      Plazo: `${docSnap.data().plazo} meses`,
+      Unidad: numberFormat.format(docSnap.data().unidad),
+      "Precio de venta": numberFormat.format(precio_venta),
+      Ganancia: numberFormat.format(ganancia),
+    };
 
     await setDoc(
       doc(db, "users", session.user.email, "walletFuturos", futuroID),
@@ -75,9 +88,36 @@ function VenderFuturo({ entriesData }) {
         nombre: docSnap.data().nombre,
         tarifa: docSnap.data().tarifa,
         inversion: docSnap.data().inversion,
+        unidad: docSnap.data().unidad,
         precio_venta,
         ganancia,
       }
+    ).then(
+      Swal.fire({
+        icon: "success",
+        title: "Venta del futuro exitosa!",
+        text: "¿Quieres generar tu carta de confirmación?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, generar",
+        cancelButtonText: "No (la podrás generar despues)",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          setCarta(session.user.name, "Venta de futuros", table);
+        }
+
+        await setDoc(
+          doc(
+            db,
+            "users",
+            session.user.email,
+            "letter_futuros",
+            `${docSnap.data().id}_venta`
+          ),
+          table
+        );
+      })
     );
   }
   //#endregion
@@ -130,7 +170,7 @@ function VenderFuturo({ entriesData }) {
                     inversion={futuro.inversion}
                     tarifa={futuro.tarifa}
                     plazo={futuro.plazo}
-                    ganancia={futuro.ganancia}
+                    unidad={futuro.unidad}
                     urlImg={futuro.urlImg}
                   />
 

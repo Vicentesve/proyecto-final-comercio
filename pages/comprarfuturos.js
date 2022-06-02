@@ -17,6 +17,7 @@ import {
   query,
 } from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
+import funcionesPDF from "./../functions/setCartaConfirmacion";
 
 function ComprarFuturos() {
   const { data: session } = useSession();
@@ -38,6 +39,9 @@ function ComprarFuturos() {
   const [plazo, setPlazo] = useState("");
   const [urlImg, setUrlImg] = useState("");
   const [fecha, setFecha] = useState();
+  const options = { style: "currency", currency: "USD" };
+  const numberFormat = new Intl.NumberFormat("en-US", options);
+  const { setCarta } = funcionesPDF();
   //#endregion
   //#region Futuros
   const futuros = [
@@ -262,7 +266,7 @@ function ComprarFuturos() {
       ...entry.data(),
     }));
 
-    let ganancia = tarifa * inversion * -1;
+    let unidad = inversion / tarifa;
     let generateID = `${futuroID}${nombre.toUpperCase()}${
       entriesData.length
     }${new Date().getTime()}`.replace(/\s/g, "");
@@ -274,8 +278,22 @@ function ComprarFuturos() {
       inversion,
       plazo,
       fecha,
-      ganancia,
+      unidad,
       urlImg,
+    };
+
+    let table = {
+      "Tipo de operación": "Compra de futuros",
+      Instrumento: "MXN/USD",
+      Mercado: "Derivados",
+      Portafolio: "Simply Wallet St",
+      Compra: nombre.toString(),
+      "Buy/Sell": "Buy",
+      "Fecha de ejecución": fecha,
+      "Tarifa contratada": numberFormat.format(tarifa),
+      Inversión: numberFormat.format(inversion),
+      Plazo: `${plazo} meses`,
+      Unidad: numberFormat.format(unidad),
     };
 
     await setDoc(
@@ -285,8 +303,16 @@ function ComprarFuturos() {
       Swal.fire({
         icon: "success",
         title: "¡Compra exitosa!",
-        showConfirmButton: false,
-        timer: 1500,
+        text: "¿Quieres generar tu carta de confirmación?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, generar",
+        cancelButtonText: "No (la podrás generar despues)",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setCarta(session.user.name, "Compra de futuros", table);
+        }
       })
     );
 
@@ -305,9 +331,20 @@ function ComprarFuturos() {
         nombre,
         tarifa,
         inversion,
+        unidad,
         precio_venta,
-        ganancia,
       }
+    );
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        session.user.email,
+        "letter_futuros",
+        `${generateID}_compra`
+      ),
+      table
     );
   }
 

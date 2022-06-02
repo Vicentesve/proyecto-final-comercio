@@ -16,9 +16,14 @@ import Header from "../components/Header";
 import SideNav from "../components/SideNav";
 import Ticket from "../components/Ticket";
 import { db } from "../firebase/initFirebase";
+import funcionesPDF from "./../functions/setCartaConfirmacion";
 
 function Vender({ entriesData }) {
   const { data: session } = useSession();
+  const { setCarta } = funcionesPDF();
+
+  const options = { style: "currency", currency: "USD" };
+  const numberFormat = new Intl.NumberFormat("en-US", options);
 
   //#region useStates
   const [acciones, setAcciones] = useState(entriesData);
@@ -65,6 +70,21 @@ function Vender({ entriesData }) {
     let pIVAStock = (pComisionStock / 100) * 16;
     let pTotalFinalStock = pTotalStock - pComisionStock - pIVAStock;
 
+    let table = {
+      "Tipo de operación": "Venta de acciones",
+      Instrumento: "MXN/USD",
+      Mercado: "Capitales",
+      Portafolio: "Simply Wallet St",
+      Contraparte: nombre.toString(),
+      "Buy/Sell": "Sell",
+      "Fecha de ejecución": fecha,
+      Cantidad: cantVender,
+      "Precio acordado": numberFormat.format(valorVender),
+      "Tipo de cambio": numberFormat.format(cambio),
+      Comisión: `${comision}%`,
+      IVA: `${iva}%`,
+    };
+
     if (cantVender > cantidad) {
       Swal.fire({
         icon: "warning",
@@ -75,9 +95,17 @@ function Vender({ entriesData }) {
       await deleteDoc(doc(db, "users", session.user.email, "stocks", accionID));
       Swal.fire({
         icon: "success",
-        title: "Venta de la acción " + nombre + " exitosa!",
-        showConfirmButton: false,
-        timer: 1500,
+        title: "Venta exitosa!",
+        text: "¿Quieres generar tu carta de confirmación?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, generar",
+        cancelButtonText: "No (la podrás generar despues)",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setCarta(session.user.name, "Venta de acciones", table);
+        }
       });
     } else {
       const accion = {
@@ -99,9 +127,17 @@ function Vender({ entriesData }) {
       ).then(
         Swal.fire({
           icon: "success",
-          title: "Venta de la acción " + nombre + " exitosa!",
-          showConfirmButton: false,
-          timer: 1500,
+          title: "¡Compra exitosa!",
+          text: "¿Quieres generar tu carta de confirmación?",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, generar",
+          cancelButtonText: "No (la podrás generar despues)",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setCarta(session.user.name, "Venta de acciones", table);
+          }
         })
       );
 
@@ -142,6 +178,17 @@ function Vender({ entriesData }) {
         fecha,
         cantidad: parseInt(cantVender),
       }
+    );
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        session.user.email,
+        "letter_stocks",
+        accionID + "_" + entriesData.length
+      ),
+      table
     );
 
     setAcciones(entriesData);

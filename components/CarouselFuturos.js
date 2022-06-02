@@ -40,7 +40,7 @@ function EmblaCarousel({ nombre, valores }) {
           <div className="embla__container space-x-5 ">
             {valores.map((valor) => (
               <div className="embla__slide" key={nombre}>
-                <div className="embla__slide__inner">
+                <div className="embla__slide__inner ">
                   <TicketFuturo
                     key={valor.id}
                     id={valor.id}
@@ -49,7 +49,7 @@ function EmblaCarousel({ nombre, valores }) {
                     inversion={valor.inversion}
                     tarifa={valor.tarifa}
                     plazo={valor.plazo}
-                    ganancia={valor.ganancia}
+                    unidad={valor.unidad}
                     urlImg={valor.urlImg}
                   />
                 </div>

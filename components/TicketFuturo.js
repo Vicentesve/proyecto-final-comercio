@@ -8,7 +8,7 @@ function Ticket({
   tarifa,
   inversion,
   plazo,
-  ganancia,
+  unidad,
   urlImg,
 }) {
   const componentRef = useRef();
@@ -34,8 +34,8 @@ function Ticket({
                 />
               </div>
 
-              <div className="flex">
-                <div className="flex justify-between p-4 flex-wrap">
+              <div className="p-2">
+                <div className="flex justify-around">
                   <div>
                     <p className="font-semibold text-sm">Fecha</p>
                     <p className="text-sm">{fecha}</p>
@@ -51,7 +51,7 @@ function Ticket({
                     <p className="text-sm">{fecha_venciento}</p>
                   </div>
                 </div>
-                <div className="flex justify-between p-4 flex-wrap ">
+                <div className="flex justify-around ">
                   <div>
                     <p className="font-semibold text-sm">Tarifa</p>
                     <CurrencyFormat
@@ -82,10 +82,10 @@ function Ticket({
             <div className="p-4 flex items-center justify-between">
               <img className="h-[70px]" src="/codeBars.png" alt="" />
               <div className="mr-5">
-                <p className="font-semibold">Ganancia contratada</p>
+                <p className="font-semibold">Unidad</p>
                 <CurrencyFormat
                   className="text-sm"
-                  value={ganancia}
+                  value={unidad}
                   displayType={"text"}
                   thousandSeparator={true}
                   prefix={"$"}

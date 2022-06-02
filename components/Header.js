@@ -11,6 +11,9 @@ import {
   PresentationChartBarIcon,
   PresentationChartLineIcon,
   ChartPieIcon,
+  DocumentTextIcon,
+  CashIcon,
+  NewspaperIcon,
 } from "@heroicons/react/outline";
 import { BiUser } from "react-icons/bi";
 import * as HoverCardPrimitive from "@radix-ui/react-hover-card";
@@ -109,6 +112,24 @@ function Header(props) {
                     <CreditCardIcon className="h-4" />
                     <button>Mi cartera</button>
                   </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/carta-acciones");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title:
+                            "Inicia sesión para ver tus cartas de confirmación",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <DocumentTextIcon className="h-4" />
+                    <button>Carta de confirmación</button>
+                  </div>
                 </div>
                 <HoverCardPrimitive.HoverCardArrow className="fill-white" />
               </HoverCardContent>
@@ -189,6 +210,71 @@ function Header(props) {
                   >
                     <CreditCardIcon className="h-4" />
                     <button>Mi cartera</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/carta-futuros");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title:
+                            "Inicia sesión para ver tus cartas de confirmación",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <DocumentTextIcon className="h-4" />
+                    <button>Carta de confirmación</button>
+                  </div>
+                </div>
+                <HoverCardPrimitive.HoverCardArrow className="fill-white" />
+              </HoverCardContent>
+            </HoverCard>
+          </div>
+
+          <div className="elementsNav">
+            <CashIcon className="h-4" />
+            <HoverCard>
+              <HoverCardTrigger>
+                <p>Mercado de dinero</p>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-60 bg-white border border-[#c7bbbb] rounded-md shadow-md p-2">
+                <div className="flex flex-col space-y-3">
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/mis-bonos");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión para ver tus acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <NewspaperIcon className="h-4" />
+                    <button>Mis bonos</button>
+                  </div>
+
+                  <div
+                    onClick={() => {
+                      if (session) {
+                        router.push("/comprar-bonos");
+                      } else {
+                        Swal.fire({
+                          icon: "warning",
+                          title: "Inicia sesión comprar acciones",
+                        });
+                      }
+                    }}
+                    className="subElementsNav"
+                  >
+                    <ShoppingBagIcon className="h-4" />
+                    <button>Comprar bonos</button>
                   </div>
                 </div>
                 <HoverCardPrimitive.HoverCardArrow className="fill-white" />

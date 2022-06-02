@@ -27,6 +27,7 @@ function MiCarteraFuturos({ walletDoc }) {
               <th>Plazo</th>
               <th>Fecha de vencimiento</th>
               <th>Inversión</th>
+              <th>Unidad</th>
               <th>Tarifa contratada</th>
               <th>Tarifa vendida</th>
               <th>Ganancia</th>
@@ -47,6 +48,15 @@ function MiCarteraFuturos({ walletDoc }) {
                 <td>
                   <CurrencyFormat
                     value={wallet.inversion}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                    renderText={(value) => <p>{value}</p>}
+                  />
+                </td>
+                <td>
+                  <CurrencyFormat
+                    value={wallet.unidad}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}

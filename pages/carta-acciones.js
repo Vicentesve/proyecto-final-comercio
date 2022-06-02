@@ -1,35 +1,26 @@
-import { collection, getDocs } from "firebase/firestore";
 import { getSession } from "next-auth/react";
 import React from "react";
 import Header from "../components/Header";
+import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../firebase/initFirebase";
-import CarouselFuturos from "../components/CarouselFuturos";
+import CarrouselCartas from "./../components/CarrouselCartas";
 
-function misfuturos({ entriesData }) {
-  function groupArrayOfObjects(list, key) {
-    return list.reduce(function (rv, x) {
-      (rv[x[key]] = rv[x[key]] || []).push(x);
-      return rv;
-    }, {});
-  }
-  var groupedFuturos = groupArrayOfObjects(entriesData, "nombre");
-
+function CartaAcciones({ entriesData }) {
   return (
     <div>
       <Header />
       <div className="bg-white">
         <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
-          {entriesData.length > 0 ? "Mis futuros" : "No tienes futuros"}
+          {entriesData.length > 0
+            ? "Mis cartas de confirmación"
+            : "No tienes cartas de confirmación"}
         </h1>
+
         {entriesData.length > 0 ? (
-          <div className="p-10 w-full justify-center flex flex-wrap">
-            {Object.keys(groupedFuturos).map((obj, i) => {
-              return (
-                <div key={i} className="w-[35%] relative mb-10">
-                  <CarouselFuturos nombre={obj} valores={groupedFuturos[obj]} />
-                </div>
-              );
-            })}
+          <div className="p-10 w-full justify-center flex flex-wrap ">
+            <div className="w-[40%]">
+              <CarrouselCartas cartas={entriesData} />
+            </div>
           </div>
         ) : (
           <img
@@ -56,7 +47,7 @@ export async function getServerSideProps(context) {
   }
 
   const querySnapshot = await getDocs(
-    collection(db, "users", session.user.email, "futuros")
+    collection(db, "users", session.user.email, "letter_stocks")
   );
   const entriesData = querySnapshot.docs.map((entry) => ({
     id: entry.id,
@@ -68,4 +59,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default misfuturos;
+export default CartaAcciones;

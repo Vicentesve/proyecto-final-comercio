@@ -14,9 +14,14 @@ import { db } from "../firebase/initFirebase";
 import Swal from "sweetalert2";
 import CurrencyFormat from "react-currency-format";
 import SideNav from "../components/SideNav";
+import funcionesPDF from "./../functions/setCartaConfirmacion";
 
 function Comprar() {
   const { data: session } = useSession();
+  const { setCarta } = funcionesPDF();
+
+  const options = { style: "currency", currency: "USD" };
+  const numberFormat = new Intl.NumberFormat("en-US", options);
 
   //#region variables acciones
   const [accionID, setAccion] = useState(0);
@@ -68,6 +73,20 @@ function Comprar() {
     const docRef = doc(db, "users", session.user.email, "stocks", accionID);
     const docSnap = await getDoc(docRef);
 
+    let table = {
+      "Tipo de operación": "Compra de acciones",
+      Instrumento: "MXN/USD",
+      Mercado: "Capitales",
+      Portafolio: "Simply Wallet St",
+      Contraparte: nombre.toString(),
+      "Buy/Sell": "Buy",
+      "Fecha de ejecución": fecha,
+      Cantidad: cantidad,
+      "Precio acordado": numberFormat.format(valor),
+      "Tipo de cambio": numberFormat.format(cambio),
+      Comisión: `${comision}%`,
+      IVA: `${iva}%`,
+    };
     let accion = {};
     let pTotal = valor * cantidad;
     let pComision = (pTotal / 100) * comision;
@@ -111,8 +130,16 @@ function Comprar() {
       Swal.fire({
         icon: "success",
         title: "¡Compra exitosa!",
-        showConfirmButton: false,
-        timer: 1500,
+        text: "¿Quieres generar tu carta de confirmación?",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, generar",
+        cancelButtonText: "No (la podrás generar despues)",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          setCarta(session.user.name, "Compra de acciones", table);
+        }
       })
     );
 
@@ -141,6 +168,17 @@ function Comprar() {
         fecha,
         cantidad,
       }
+    );
+
+    await setDoc(
+      doc(
+        db,
+        "users",
+        session.user.email,
+        "letter_stocks",
+        accionID + "_" + entriesData.length
+      ),
+      table
     );
   }
   //#endregion

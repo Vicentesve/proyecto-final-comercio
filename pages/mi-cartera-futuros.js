@@ -60,6 +60,7 @@ function MiCarteraFuturos({ walletDoc }) {
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
+                    decimalScale={2}
                     renderText={(value) => <p>{value}</p>}
                   />
                 </td>

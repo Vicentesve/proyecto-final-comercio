@@ -35,7 +35,7 @@ function ComprarBonos() {
     let cupones = plazo * 2;
     setBonus([]);
     for (let i = 1; i <= cupones; i++) {
-      let tasa = genRand(6.4, 7, 3);
+      let tasa = genRand(4, 5, 3);
       let interes = monto * (tasa / 100);
       let isr = 0.16 * interes;
       let rendimiento = interes - isr;

@@ -47,24 +47,26 @@ function TableGanancias({ llave, value, myWallet }) {
           {getGanacias(llave)}
         </div>
         <table className="w-full text-left mt-2 text-xs sm:text-sm ">
+          <tr className="text-sm text-left">
+            <th>Descripción</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+          </tr>
           <tbody>
-            <tr className="text-sm text-left">
-              <th>Descripción</th>
-              <th>Monto</th>
-              <th>Fecha</th>
-            </tr>
             {value.map((wallet, i) => (
-              <tr className=" " key={i}>
-                <td className="flex items-center space-x-1">
-                  {wallet.tipo === "Compra" ? (
-                    <ShoppingBagIcon className="h-4 mt-[1px]" />
-                  ) : (
-                    <ReceiptRefundIcon className="h-4 mt-[1px]" />
-                  )}
-                  <p>
-                    {wallet.tipo} de {wallet.cantidad}{" "}
-                    {wallet.cantidad > 1 ? "acciones" : "acción"}{" "}
-                  </p>
+              <tr key={i}>
+                <td>
+                  <div className="flex space-x-2">
+                    {wallet.tipo === "Compra" ? (
+                      <ShoppingBagIcon className="h-4 mt-[1px]" />
+                    ) : (
+                      <ReceiptRefundIcon className="h-4 mt-[1px]" />
+                    )}
+                    <p>
+                      {wallet.tipo} de {wallet.cantidad}{" "}
+                      {wallet.cantidad > 1 ? "acciones" : "acción"}
+                    </p>
+                  </div>
                 </td>
                 <td>
                   <CurrencyFormat
@@ -72,6 +74,7 @@ function TableGanancias({ llave, value, myWallet }) {
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
+                    decimalScale={2}
                     renderText={(value) => <p>{value}</p>}
                   />
                 </td>

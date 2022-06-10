@@ -15,13 +15,22 @@ import Swal from "sweetalert2";
 import CurrencyFormat from "react-currency-format";
 import SideNav from "../components/SideNav";
 import funcionesPDF from "./../functions/setCartaConfirmacion";
+import funcionesVar from "./../functions/var";
+import { Popover } from "@mui/material";
+import { XIcon } from "@heroicons/react/outline";
 
 function Comprar() {
+  //#region Variables genrales
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
   const { data: session } = useSession();
   const { setCarta } = funcionesPDF();
+  const { generar_valor_de_riesgo } = funcionesVar();
+  const [riskValue, setRiskValue] = useState([]);
 
   const options = { style: "currency", currency: "USD" };
   const numberFormat = new Intl.NumberFormat("en-US", options);
+  //#endregion
 
   //#region variables acciones
   const [accionID, setAccion] = useState(0);
@@ -54,6 +63,23 @@ function Comprar() {
       urlImg:
         "https://graffica.info/wp-content/uploads/2018/11/disneyplus-1024x577.jpg",
     },
+    {
+      id: "NFLX",
+      nombre: "Netflix",
+      urlImg:
+        "https://1000marcas.net/wp-content/uploads/2020/01/Logo-Netflix.png",
+    },
+    {
+      id: "RUN",
+      nombre: "SunRun",
+      urlImg:
+        "https://1000marcas.net/wp-content/uploads/2021/05/Sunrun-Logo-2016.png",
+    },
+    {
+      id: "WMT",
+      nombre: "Walmart",
+      urlImg: "https://cdn.mos.cms.futurecdn.net/5StAbRHLA4ZdyzQZVivm2c.jpg",
+    },
   ];
   //#endregion
 
@@ -66,6 +92,17 @@ function Comprar() {
   const closeNav = () => {
     setNavOpen(false);
   };
+  //#endregion
+
+  //#region Total a pagar
+  function totalPagar() {
+    let pTotal = valor * cantidad;
+    let pComision = (pTotal / 100) * comision;
+    let pIVA = (pComision / 100) * iva;
+    let pTotalFinal = pTotal + pComision + pIVA;
+
+    return pTotalFinal;
+  }
   //#endregion
 
   //#region comprarAccion
@@ -228,6 +265,13 @@ function Comprar() {
 
   return (
     <div>
+      {/* Background opacity */}
+      <div
+        className={`bg-black_rgba absolute w-full h-screen ${
+          !isPopoverOpen ? "hidden" : ""
+        }`}
+      ></div>
+
       <SideNav click={closeNav} state={state} />
       <Header click={openNav} />
       <h1 className="font-semibold text-xl p-2 text-center mt-2 sm:text-2xl sm:font-bold">
@@ -383,8 +427,20 @@ function Comprar() {
             />
           </div>
 
+          <CurrencyFormat
+            className="text-sm"
+            value={totalPagar()}
+            displayType={"text"}
+            thousandSeparator={true}
+            prefix={"$"}
+            renderText={(value) => (
+              <p className="mt-3 text-center">{`Total a pagar: ${value}`}</p>
+            )}
+            decimalScale={2}
+          />
+
           {/* Botón comprar  */}
-          <div className="flex justify-center mt-6">
+          <div className="flex justify-center mt-6 space-x-5">
             <button
               onClick={() => {
                 if (!validations()) {
@@ -400,7 +456,77 @@ function Comprar() {
             >
               Comprar
             </button>
+
+            {/* Calcular */}
+            <button
+              onClick={() => {
+                setRiskValue(
+                  generar_valor_de_riesgo(accionID, valor, cantidad)
+                );
+                setIsPopoverOpen(!isPopoverOpen);
+              }}
+              className="button"
+            >
+              VAR
+            </button>
           </div>
+        </div>
+      </div>
+
+      {/* Popup */}
+      <div
+        className={`p-2 absolute h-[80%] bg-white w-[40%] top-[50%] left-[50%] 
+        transform -translate-x-[50%] -translate-y-1/2 border border-gray-400 shadow-md rounded-md overflow-y-scroll
+        ${isPopoverOpen ? "block" : "hidden"}`}
+      >
+        {/* Close */}
+        <div className="">
+          <div className="flex justify-end p-1 cursor-pointer h-7 ">
+            <XIcon
+              onClick={() => setIsPopoverOpen(false)}
+              className="h-full hover:opacity-70"
+            />
+          </div>
+          <h1 className="font-semibold text-xl text-center">Valor de riesgo</h1>
+          <table className="w-full ">
+            <thead>
+              <tr className="text-left">
+                <th>Indíce</th>
+                <th>P&L</th>
+                <th>Probalidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {riskValue.map((value, i) => (
+                <tr
+                  className={`text-sm  ${value.var ? " bg-yellow-300" : ""}`}
+                  key={i}
+                >
+                  <td>{value.index}</td>
+                  <td>
+                    <CurrencyFormat
+                      value={value.p_l_manana}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                      decimalScale={2}
+                      renderText={(value) => <p>{value}</p>}
+                    />
+                  </td>
+                  <td>
+                    <CurrencyFormat
+                      value={value.prob * 100}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      suffix={"%"}
+                      decimalScale={3}
+                      renderText={(value) => <p>{value}</p>}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

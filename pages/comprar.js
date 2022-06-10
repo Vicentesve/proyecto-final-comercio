@@ -460,6 +460,9 @@ function Comprar() {
             {/* Calcular */}
             <button
               onClick={() => {
+                if (!validations()) {
+                  return;
+                }
                 setRiskValue(
                   generar_valor_de_riesgo(accionID, valor, cantidad)
                 );
